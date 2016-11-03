@@ -54,19 +54,15 @@ void EMShower(unsigned int seed = 1234){
   	cout<< "Particles in the shower: " << all_particles.size() <<endl;
     n++;//--------------------------------------------------------------------
   }
- }
 
-/*//Check class Vector3D
-	vector<double> v1, v2;
-	for(int i = 0; i < 3; i++){
-		v1.push_back(i+1);
-		v2.push_back(i+2);}
-	cout<< "v1: ("<< v1.at(0) <<", "<< v1.at(1) <<", "<< v1.at(2) <<")" <<endl;
-	cout<< "v1: ("<< v2.at(0) <<", "<< v2.at(1) <<", "<< v2.at(2) <<")" <<endl;
-	double l = 3.;
-	cout<< "l: " << l <<endl;
-	cout<< "---------------" <<endl;
 
+//Check class Vector3D
+	Vector3D v1(1., 2., 3.);
+	Vector3D v2(2., 3., 4.);
+	cout<< "Prodotto scalare: " << Vector3D::Dot(v1, v2) <<endl;
+
+}
+/*
   //Check dot product
 	Vector3D vec1;
 	double scalar_product = vec1.Dot(v1, v2);
