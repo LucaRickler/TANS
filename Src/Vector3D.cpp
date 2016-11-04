@@ -36,9 +36,31 @@ Vector3D& Vector3D::operator= (const Vector3D& other) {
     return *this;
   //delete this;
   //new(this) Vector3D(other);
-  this->r = other.r;
-  this->phi = other.phi;
-  this->z = other.z;
+  this->r = other.GetR;
+  this->phi = other.GetPhi;
+  this->z = other.GetZ;
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D& Vector3D::operator+ (const Vector3D& other) {
+  double x = GetX() + other.GetX();
+  double y = GetY() + other.GetY();
+  this->r = TMath::Sqrt(x*x + y*y);
+  this->phi += TMath::ATan2(y,x);
+  this->z += other.GetZ();
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D& Vector3D::operator- (const Vector3D& other) {
+  double x = GetX() - other.GetX();
+  double y = GetY() - other.GetY();
+  this->r = TMath::Sqrt(x*x + y*y);
+  this->phi += TMath::ATan2(y,x);
+  this->z -= other.GetZ();
   return *this;
 }
 

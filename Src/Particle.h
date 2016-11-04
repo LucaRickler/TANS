@@ -32,7 +32,7 @@ class Particle : public TObject{
 		* static Vector3D delta_pos; (Codice vero, devi scriverlo così)
 		*	old_position = position
 		*	position = ...
-		* delta_pos += position - old_position (qui devo scrivere gli operatori di sommma, non funzionerà ancora)
+		* delta_pos += position - old_position (ci sono gli operatori di somma e differenza per Vector3D, quindi puoi fare c=a+-b)
 		* if(delta_pos > libero cammino assorb)
 		* 	assorbi (non te ne preoccupare adesso, lo faremo più tardi. Sostituiscilo con solo un ";", fidati)
 		*/
