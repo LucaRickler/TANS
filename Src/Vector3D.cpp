@@ -36,9 +36,9 @@ Vector3D& Vector3D::operator= (const Vector3D& other) {
     return *this;
   //delete this;
   //new(this) Vector3D(other);
-  this->r = other.GetR;
-  this->phi = other.GetPhi;
-  this->z = other.GetZ;
+  this->r = other.GetR();
+  this->phi = other.GetPhi();
+  this->z = other.GetZ();
   return *this;
 }
 
