@@ -12,10 +12,14 @@ public:
   Vector3D(const Vector3D& v);
   ~Vector3D(){}
   Vector3D& operator= (const Vector3D& v);
-  double GetR() const {return this->r;}
-  double GetPhi() const {return this->phi;}
-  double GetZ() const {return this->z;}
-  const double GetNorm();
+
+  const double GetR() const {return this->r;}
+  const double GetPhi() const {return this->phi;}
+  const double GetX() const;
+  const double GetY() const;
+  const double GetZ() const {return this->z;}
+  const double GetNorm() const;
+
   static const double Dot(const Vector3D& v1, const Vector3D& v2);
   const double Dot(const Vector3D& v);
   static const Vector3D Cross(const Vector3D& v1, const Vector3D& v2);
