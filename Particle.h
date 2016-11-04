@@ -20,8 +20,6 @@ class Particle{
 		bool pprimary;
 		double pthreshold_g;
 		double pthreshold_ep;
-		Vector3D pold_position;
-		Vector3D pposition;
 		PType ptype;
 };
 

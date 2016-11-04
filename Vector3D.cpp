@@ -1,54 +1,46 @@
-#include "Vector3D.h"
-
+ #include "Vector3D.h"
 //---------------------------------------------------------------------------//
 
 Vector3D::Vector3D(){}
 
 //---------------------------------------------------------------------------//
 
-double Vector3D::Dot(vector<double> v1, vector<double> v2){
+Vector3D::Vector3D(double r, double phi, double z){
+  this->r = r;
+  this->phi = phi;
+  this->z = z;
+}
 
-  double scalar = 0.;
-  for(int i = 0; i < 3; i++)
-    scalar += v1.at(i)*v2.at(i);
-
+//---------------------------------------------------------------------------//
+//Mi sto chiedendo come prendere r, phi, z da v1 e v2...perché così non funziona?  
+static double Dot(const Vector3D& v1, const Vector3D& v2){
+  double scalar = v1.GetR()*v2.GetPhi() + v1.GetPhi()*v2.GetPhi() + v1.GetZ()*v2.GetZ();
   return scalar;
 }
 
 //---------------------------------------------------------------------------//
 
-vector<double> Vector3D::Cross(vector<double> v1, vector<double> v2){
-
-  vector<double> cross_product;
-
-  for(int i = 0; i < 3; i++)
-  switch(i){
-    case 0:
-    cross_product.push_back(v1.at(1)*v2.at(2) - v1.at(2)*v2.at(1));
-    break;
-
-    case 1:
-    cross_product.push_back(- v1.at(0)*v2.at(2) + v1.at(2)*v2.at(0));
-    break;
-
-    case 2:
-    cross_product.push_back(v1.at(0)*v2.at(1) - v1.at(1)*v2.at(0));
-    break;
-  }
-
-  return cross_product;
-  }
+const double Dot(const Vector3D& v){
+  return Dot(*this, v);
+}
 
 //---------------------------------------------------------------------------//
 
-vector<double> Vector3D::ScalarMultiplication(double l, vector<double> v1){
+static Vector3D Cross(const Vector3D& v1, const Vector3D& v2){
 
-  vector<double> by_scalar;
+   double i = v1.GetR()*v2.GetPhi() - v1.GetPhi()*v2.GetR();
+   double j = -v1.GetZ()*v2.GetPhi() + v1.GetPhi()*v2.GetZ();
+   double k = v1.GetZ()*v2.GetR() - v1.GetR()*v2.GetZ();
 
-  for(int i = 0; i < 3; i++)
-    by_scalar.push_back(v1.at(i)*l);
+   Vector3D v3 = new Vector3D(i, j, k);
+   return v3;
 
-  return by_scalar;
+}
+
+//---------------------------------------------------------------------------//
+
+const Vector3D Cross(const Vector3D& v){
+  return Cross(*this, v);
 }
 
 //---------------------------------------------------------------------------//
