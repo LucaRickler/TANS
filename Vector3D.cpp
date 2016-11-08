@@ -1,45 +1,120 @@
- #include "Vector3D.h"
+#include "Vector3D.h"
+ClassImp(Vector3D)
+
 //---------------------------------------------------------------------------//
 
-Vector3D::Vector3D(){}
+Vector3D::Vector3D(){
+  this->r = 0.0;
+  this->phi = 0.0;
+  this->z = 0.0;
+}
 
 //---------------------------------------------------------------------------//
 
 Vector3D::Vector3D(double r, double phi, double z){
-  this->r = r;
+  this->r = (r >= 0.0 ? r : 0.0);
+  while(phi < 0.0)
+    phi += 2.0*TMath::Pi();
+  while(phi > 2.0*TMath::Pi())
+    phi -= 2.0*TMath::Pi();
   this->phi = phi;
-  this->z = z;
+  this->z = (z >= 0.0 ? z : 0.0); /*
+                                   *   Ho messo questo "controllo" su z.
+                                   *   Direi che z = 0 è il sea level e
+                                   *   che sotto zero z non ha senso. 
+                                   */
 }
 
 //---------------------------------------------------------------------------//
-//Mi sto chiedendo come prendere r, phi, z da v1 e v2...perché così non funziona?  
-static double Dot(const Vector3D& v1, const Vector3D& v2){
-  double scalar = v1.GetR()*v2.GetPhi() + v1.GetPhi()*v2.GetPhi() + v1.GetZ()*v2.GetZ();
-  return scalar;
+
+Vector3D::Vector3D(const Vector3D& other){
+  this->r = other.r;
+  this->phi = other.phi;
+  this->z = other.z;
 }
 
 //---------------------------------------------------------------------------//
 
-const double Dot(const Vector3D& v){
+Vector3D& Vector3D::operator= (const Vector3D& other) {
+  if(this == &other)
+    return *this;
+  //delete this;
+  //new(this) Vector3D(other);
+  this->r = other.GetR();
+  this->phi = other.GetPhi();
+  this->z = other.GetZ();
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D& Vector3D::operator+ (const Vector3D& other) {
+  double x = GetX() + other.GetX();
+  double y = GetY() + other.GetY();
+  this->r = TMath::Sqrt(x*x + y*y);
+  this->phi += TMath::ATan2(y,x);
+  this->z += other.GetZ();
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D& Vector3D::operator- (const Vector3D& other) {
+  double x = GetX() - other.GetX();
+  double y = GetY() - other.GetY();
+  this->r = TMath::Sqrt(x*x + y*y);
+  this->phi += TMath::ATan2(y,x);
+  this->z -= other.GetZ();
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
+const double Vector3D::GetX() const {
+  return GetR()*TMath::Cos(GetPhi());
+}
+
+//---------------------------------------------------------------------------//
+
+const double Vector3D::GetY() const {
+  return GetR()*TMath::Sin(GetPhi());
+}
+
+//---------------------------------------------------------------------------//
+
+const double Vector3D::GetNorm () const {
+  return TMath::Sqrt(GetR()*GetR() + GetZ()*GetZ());
+}
+
+//---------------------------------------------------------------------------//
+
+const double Vector3D::Dot(const Vector3D& v1, const Vector3D& v2){
+  return v1.GetX()*v2.GetX() + v1.GetY()*v2.GetY() + v1.GetZ()*v2.GetZ();
+}
+
+//---------------------------------------------------------------------------//
+
+const double Vector3D::Dot(const Vector3D& v){
   return Dot(*this, v);
 }
 
 //---------------------------------------------------------------------------//
 
-static Vector3D Cross(const Vector3D& v1, const Vector3D& v2){
+const Vector3D Vector3D::Cross(const Vector3D& v1, const Vector3D& v2){
 
-   double i = v1.GetR()*v2.GetPhi() - v1.GetPhi()*v2.GetR();
-   double j = -v1.GetZ()*v2.GetPhi() + v1.GetPhi()*v2.GetZ();
-   double k = v1.GetZ()*v2.GetR() - v1.GetR()*v2.GetZ();
+   double x = v1.GetX()*v2.GetY() - v1.GetY()*v2.GetX();
+   double y = -v1.GetZ()*v2.GetY() + v1.GetY()*v2.GetZ();
+   double z = v1.GetZ()*v2.GetX() - v1.GetX()*v2.GetZ();
 
-   Vector3D v3 = new Vector3D(i, j, k);
-   return v3;
+   double r = TMath::Sqrt(x*x + y*y);
+   double phi = TMath::ATan2(y,x);
 
+   return Vector3D(r, phi, z);
 }
 
 //---------------------------------------------------------------------------//
 
-const Vector3D Cross(const Vector3D& v){
+const Vector3D Vector3D::Cross(const Vector3D& v){
   return Cross(*this, v);
 }
 
