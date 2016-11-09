@@ -2,7 +2,6 @@
 #define PARTICLE_H_
 
 #include "Vector3D.h"
-#include <TObject.h>
 
 enum PType {
 	PGAMMA = 0,
@@ -22,9 +21,9 @@ enum PType {
 class Particle : public TObject{
 	public:
 		Particle();
-		Particle(PType ptype, double energy, const Vector3D& direction, bool primary = false);
-		bool Divide(Particle* p1, Particle* p2); // Splitting della particella
-		bool Propagate(); // Trasporto della particella
+		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
+		bool Divide(double h, Particle* p1, Particle* p2); // Splitting della particella
+		bool Propagate(double h); // Trasporto della particella
 		const double GetEnergy const {return energy;}
 		const PType GetPType const {return ptype;}
 		const bool IsPrimary const {return is_primary;}
@@ -36,7 +35,8 @@ class Particle : public TObject{
 		double energy; // MeV
 		bool is_primary;
 		const double threshold_g = 10.; // Soglia in MeV per i gamma (g) per fare produzione di coppia.
-		const double threshold_ep = 88.; // Soglia in MeV per gli elettroni/positroni (ep) per fare bremmstrahlung.
+		//ottenuto ad occhio dai grafici di probabilità di interazione di gamma
+		const double threshold_ep = 88.05; // Soglia in MeV per gli elettroni/positroni (ep) per fare bremmstrahlung.
 		PType ptype; // Gamma, Electron, Positron
 		Vector3D position;
 		Vector3D old_position;

@@ -3,28 +3,30 @@ ClassImp(Particle)
 
 //---------------------------------------------------------------------------//
 
-Particle::Particle(){
+Particle::Particle() : TObject() {
 		this->ptype = PGAMMA;
 	  this->energy = 0.0;
-	  this->direction = (0., 0., 0.);  // Come inizializzo "a zero" la direzione? Non credo sia giusto scrivere così.
+	  this->direction = Vector3D();
+		this->position = Vector3D();
+		this->old_position = Vector3D();
 		this->primary = false;
 }
 
 //---------------------------------------------------------------------------//
 
 Particle::Particle(PType ptype, double energy, const Vector3D& direction, bool primary){
-		while(ptype != PGAMMA && ptype != PELECTRON && ptype != PPOSITRON){
-			cout<< "Choose the primary cosmic ray between Gamma(0), Electron(1), Positron(2): " << ptype <<endl;
-		}
+		if(ptype == NUMBER_OF_PARTICLES)
+			ptype = PGAMMA;
 		this->ptype = ptype;
 	  this->energy = (energy >= 0.0 ? energy : 0.0);
 		this->direction = direction;
+		this->position = position;
 		this->primary = primary;
 }
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Divide(Particle* p1, Particle* p2){
+bool Particle::Divide(double h, Particle* p1, Particle* p2){
 
 /*
  *   Ho modificato un po' quanto mi avevi suggerito di fare! In particolare ora
@@ -39,14 +41,21 @@ bool Particle::Divide(Particle* p1, Particle* p2){
 
 		if(p1->energy > threshold_g){
 
+			double phi = gRandom->Rndm()*2.*TMath::Pi();
+			double theta = 0.;
+			r = h * TMath::Sin(theta);
 			if(p1->type == PGAMMA){
-				p1 = new Particle(PELECTRON, energy/2, direction, false); // direction??
-				p2 = new Particle(PPOSITRON, energy/2, direction, false);
+				//theta = ...
+				p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), false);
+				p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), false);
 			}
 			else{
 				if(p1->energy > threshold_ep){
-					p1 = new new Particle(PGAMMA, energy/2, direction, false);
+					//theta = ...
+					p1 = new new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), false);
 			  	p2 = NULL;
+					energy *= 0.5;
+					direction += Vector3D(r, TMath::Pi()+phi, h, true);
 				}
 			}
 
@@ -58,16 +67,15 @@ bool Particle::Divide(Particle* p1, Particle* p2){
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Propagate(){
+bool Particle::Propagate(double h){
 	 static Vector3D delta_pos;
+	 static double lcm = 0.;
+	 if(lcm == 0.)
+	 	lcm = LCM(h,z_top);
 	 old_position = position;
-	 position = (1, 2, 3); /*
-	                        *   Stesso problema di prima; non sono sicuro di avere
-	                        *   capito come passare i valori di "un oggetto che ha
-													*   per tipo una classe".
-													*/
+	 position += direction;
 	 delta_pos += position - old_position;
-	 if(delta_pos > libero cammino assorb)
+	 if(delta_pos.GetNorm() > lcm)
 		 return false;
 	 return true;
 }
