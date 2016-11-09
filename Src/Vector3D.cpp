@@ -11,18 +11,17 @@ Vector3D::Vector3D(){
 
 //---------------------------------------------------------------------------//
 
-Vector3D::Vector3D(double r, double phi, double z){
+Vector3D::Vector3D(double r, double phi, double z, bool versor){
   this->r = (r >= 0.0 ? r : 0.0);
   while(phi < 0.0)
     phi += 2.0*TMath::Pi();
   while(phi > 2.0*TMath::Pi())
     phi -= 2.0*TMath::Pi();
   this->phi = phi;
-  this->z = (z >= 0.0 ? z : 0.0); /*
-                                   *   Ho messo questo "controllo" su z.
-                                   *   Direi che z = 0 è il sea level e
-                                   *   che sotto zero z non ha senso. 
-                                   */
+  this->z = (z >= 0.0 ? z : 0.0);
+
+  if(versor)
+    *this = GetNormalized();
 }
 
 //---------------------------------------------------------------------------//
@@ -70,6 +69,12 @@ Vector3D& Vector3D::operator- (const Vector3D& other) {
 
 //---------------------------------------------------------------------------//
 
+const double Vector3D::GetTheta() const {
+  return TMath::ATan2(GetR(),GetZ());
+}
+
+//---------------------------------------------------------------------------//
+
 const double Vector3D::GetX() const {
   return GetR()*TMath::Cos(GetPhi());
 }
@@ -84,6 +89,14 @@ const double Vector3D::GetY() const {
 
 const double Vector3D::GetNorm () const {
   return TMath::Sqrt(GetR()*GetR() + GetZ()*GetZ());
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D Vector3D::GetNormalized () const {
+  double r = GetR()/GetNorm();
+  double z = GetZ()/GetNorm();
+  return Vector3D(r, GetPhi(), z);
 }
 
 //---------------------------------------------------------------------------//
