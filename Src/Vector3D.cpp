@@ -18,7 +18,11 @@ Vector3D::Vector3D(double r, double phi, double z){
   while(phi > 2.0*TMath::Pi())
     phi -= 2.0*TMath::Pi();
   this->phi = phi;
-  this->z = z;
+  this->z = (z >= 0.0 ? z : 0.0); /*
+                                   *   Ho messo questo "controllo" su z.
+                                   *   Direi che z = 0 è il sea level e
+                                   *   che sotto zero z non ha senso. 
+                                   */
 }
 
 //---------------------------------------------------------------------------//
@@ -83,9 +87,7 @@ const double Vector3D::GetNorm () const {
 }
 
 //---------------------------------------------------------------------------//
-//Mancava Vector3D:: davanti al nome della funzione. Se non lo metti crede che sia una funzione esterna (in effetti lo è) e this non esiste (lo uso dentro i Get)
-//Inoltre static non lo devi mettere nell'implementazione, solo nella dichiarazione. Const lo devi sempre mettere, invece
-//Per fare bene i conti devi passare alle coordinate cartesiane. Anche in Cross
+
 const double Vector3D::Dot(const Vector3D& v1, const Vector3D& v2){
   return v1.GetX()*v2.GetX() + v1.GetY()*v2.GetY() + v1.GetZ()*v2.GetZ();
 }

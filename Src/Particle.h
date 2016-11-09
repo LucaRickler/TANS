@@ -11,64 +11,20 @@ enum PType {
 	NUMBER_OF_PARTICLES
 }
 
-//da qualche parte ci sarà un array di double così:
+// Da qualche parte ci sarà un array di double così:
 /*
-* double *masses = new double[NUMBER_OF_PARTICLES]
-* masses[(int)PGAMMA] = 0.0
-* masses[(int)PELECTRON] = masses[(int)PPOSITRON] = ...
-*/
-//Devo decidere come e dove metterlo. Probabilmente una classe di costanti
-
-//Se non compila ancora, non ti preoccupare. Tu abbozza il codice, al debug ci penso io
+ *   double *masses = new double[NUMBER_OF_PARTICLES]
+ *   masses[(int)PGAMMA] = 0.0 // masse espresse in MeV/c^2
+ *   masses[(int)PELECTRON] = masses[(int)PPOSITRON] = 0.511 // masse espresse in MeV/c^2
+ */
+// Devo decidere come e dove metterlo. Probabilmente una classe di costanti.
 
 class Particle : public TObject{
 	public:
 		Particle();
-		Particle(PType ptype, double energy, const Vector3D& direction, bool primary = false); //(const Vector3D&, double theta); // nell'implementazione, devi omettere ""= false", altrimenti non compila
-		//void PFeatures(PType ptype, double penergy, bool pprimary); //??? A cosa serve? Senza reference non puoi passare dati all'esterno
-
-		bool Divide(Particle* p1, Particle* p2); //vedi gli appunti che ti avevo scritto, questo deve:
-		/* if(soglia)
-		*  	if(PGAMMA)
-		*			p1 = new e+
-		*			p2 = new e-
-		*		else
-		*			p1 = new gamma
-		*			p2 = NULL
-		*		return true
-		*	(else) (non serve scriverlo, è per farti capire il concetto. Senza il codice è più elegante)
-		* 	return false
-		*/
-
-		//Nel codice chiamante:
-		/*
-		* for (Particle *p in all_particles)
-		* 	Particle *p1, *p2
-		* 	if(p->Divide(p1,p2))
-		*			all_particles.remove(p)
-		*			delete p
-		*/
-
-		bool Propagate(); //Trasporto della particella
-		/*
-		* static Vector3D delta_pos; (Codice vero, devi scriverlo così)
-		*	old_position = position
-		*	position = ...
-		* delta_pos += position - old_position (ci sono gli operatori di somma e differenza per Vector3D, quindi puoi fare c=a+-b)
-		* if(delta_pos > libero cammino assorb)
-		* 	return false
-		*	(else) (non serve scriverlo, è per farti capire il concetto. Senza il codice è più elegante)
-		* 	return false
-		*/
-
-		//Nel codice chiamante:
-		/*
-		* for (Particle *p in all_particles)
-		* 	if(!p->Propagate()) (!true == false, !false == true. ! è la negazione booleana)
-		*			all_particles.remove(p)
-		*			delete p
-		*/
-
+		Particle(PType ptype, double energy, const Vector3D& direction, bool primary = false);
+		bool Divide(Particle* p1, Particle* p2); // Splitting della particella
+		bool Propagate(); // Trasporto della particella
 		const double GetEnergy const {return energy;}
 		const PType GetPType const {return ptype;}
 		const bool IsPrimary const {return is_primary;}
@@ -77,12 +33,11 @@ class Particle : public TObject{
 		Vector3D GetDirection const {return direction;}
 
 	private:
-		//vector<Particle*> pall_particles; //NON serve qua dentro, non ha senso logico che una particella contenga delle particelle
-		double energy;
+		double energy; // MeV
 		bool is_primary;
-		const double threshold_g = 0.0; //Queste convieme metterle come costanti. Le sposteremo altrove. Metti il numero giusto al posto di 0.0
-		const double threshold_ep = 0.0;
-		PType ptype;
+		const double threshold_g = 10.; // Soglia in MeV per i gamma (g) per fare produzione di coppia.
+		const double threshold_ep = 88.; // Soglia in MeV per gli elettroni/positroni (ep) per fare bremmstrahlung.
+		PType ptype; // Gamma, Electron, Positron
 		Vector3D position;
 		Vector3D old_position;
 		Vector3D direction;

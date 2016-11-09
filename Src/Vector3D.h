@@ -10,7 +10,7 @@ public:
   Vector3D();
   Vector3D(double r, double phi, double z);
   Vector3D(const Vector3D& v);
-  ~Vector3D(){}
+  ~Vector3D(){}  // Non mettiamo in "Vector3D.cpp" un default destructor? 
   Vector3D& operator= (const Vector3D& v);
   Vector3D& operator+ (const Vector3D& v);
   Vector3D& operator- (const Vector3D& v);
@@ -27,12 +27,12 @@ public:
   static const Vector3D Cross(const Vector3D& v1, const Vector3D& v2);
   const Vector3D Cross(const Vector3D& v);
 
-  // vector<double> ScalarMultiplication(double l, vector<double> v1);
+  // const Vector3D ScalarMultiplication(double l, const Vector3D v1);
 
 private:
-  double r;
-  double phi;
-  double z;
+  double r; // m
+  double phi; // rad
+  double z; // m
 
   ClassDef(Vector3D,1)
 };
