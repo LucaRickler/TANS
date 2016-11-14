@@ -3,6 +3,7 @@
 
 #include "Vector3D.h"
 #include "Constants.h"
+#include <TRandom3.h>
 
 enum PType {
 	PGAMMA = 0,
@@ -42,6 +43,8 @@ class Particle : public TObject{
 		Vector3D position;
 		Vector3D old_position;
 		Vector3D direction;
+
+		double LCM(double, double);
 
 		ClassDef(Particle, 1)
 };

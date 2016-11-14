@@ -71,13 +71,19 @@ bool Particle::Propagate(double h){
 	 static Vector3D delta_pos;
 	 static double lcm = 0.;
 	 if(lcm == 0.)
-	 	lcm = LCM(h,positon.GetZ());
+	 	lcm = LCM(h,position.GetZ());
 	 old_position = position;
 	 position += direction;
 	 delta_pos += position - old_position;
 	 if(delta_pos.GetNorm() > lcm)
 		 return false;
 	 return true;
+}
+
+//---------------------------------------------------------------------------//
+
+double Particle::LCM(double h, double z_top) {
+	return 0.;
 }
 
 //---------------------------------------------------------------------------//
