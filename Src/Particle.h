@@ -4,6 +4,7 @@
 #include "Vector3D.h"
 #include "Constants.h"
 #include <TRandom3.h>
+#include <TVector.h>
 
 enum PType {
 	PGAMMA = 0,
@@ -24,7 +25,7 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, Particle* p1, Particle* p2); // Splitting della particella
+		bool Divide(double h, vector<Particle*>& p1, Particle* p2); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
 		const double GetEnergy() const {return energy;}
 		const PType GetPType() const {return ptype;}

@@ -26,7 +26,7 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Divide(double h, Particle* p1, Particle* p2){
+bool Particle::Divide(double h, vector<Particle*>& p1, Particle* p2){
 
 /*
  *   Ho modificato un po' quanto mi avevi suggerito di fare! In particolare ora
@@ -39,20 +39,20 @@ bool Particle::Divide(double h, Particle* p1, Particle* p2){
  *   che threshold_g != threshold_ep.
  */
 
-		if(p1->energy > threshold_g){
+		if(energy > threshold_g){
 
 			double phi = gRandom->Rndm()*2.*TMath::Pi();
 			double theta = 0.;
 			double r = h * TMath::Sin(theta);
-			if(p1->ptype == PGAMMA){
+			if(ptype == PGAMMA){
 				//theta = ...
-				p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+				p1.push_back(new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false));
 				p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
 			}
 			else{
-				if(p1->energy > threshold_ep){
+				if(energy > threshold_ep){
 					//theta = ...
-					p1 = new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+					p1.push_back(new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false));
 			  	p2 = NULL;
 					energy *= 0.5;
 					direction += Vector3D(r, TMath::Pi()+phi, h, true);
