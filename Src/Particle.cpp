@@ -9,19 +9,19 @@ Particle::Particle() : TObject() {
 	  this->direction = Vector3D();
 		this->position = Vector3D();
 		this->old_position = Vector3D();
-		this->primary = false;
+		this->is_primary = false;
 }
 
 //---------------------------------------------------------------------------//
 
-Particle::Particle(PType ptype, double energy, const Vector3D& direction, bool primary){
+Particle::Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary){
 		if(ptype == NUMBER_OF_PARTICLES)
 			ptype = PGAMMA;
 		this->ptype = ptype;
 	  this->energy = (energy >= 0.0 ? energy : 0.0);
 		this->direction = direction;
 		this->position = position;
-		this->primary = primary;
+		this->is_primary = primary;
 }
 
 //---------------------------------------------------------------------------//
@@ -43,16 +43,16 @@ bool Particle::Divide(double h, Particle* p1, Particle* p2){
 
 			double phi = gRandom->Rndm()*2.*TMath::Pi();
 			double theta = 0.;
-			r = h * TMath::Sin(theta);
-			if(p1->type == PGAMMA){
+			double r = h * TMath::Sin(theta);
+			if(p1->ptype == PGAMMA){
 				//theta = ...
-				p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), false);
-				p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), false);
+				p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+				p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
 			}
 			else{
 				if(p1->energy > threshold_ep){
 					//theta = ...
-					p1 = new new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), false);
+					p1 = new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 			  	p2 = NULL;
 					energy *= 0.5;
 					direction += Vector3D(r, TMath::Pi()+phi, h, true);
@@ -71,7 +71,7 @@ bool Particle::Propagate(double h){
 	 static Vector3D delta_pos;
 	 static double lcm = 0.;
 	 if(lcm == 0.)
-	 	lcm = LCM(h,z_top);
+	 	lcm = LCM(h,positon.GetZ());
 	 old_position = position;
 	 position += direction;
 	 delta_pos += position - old_position;
