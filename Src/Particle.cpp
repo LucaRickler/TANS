@@ -28,30 +28,19 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 bool Particle::Divide(double h, vector<Particle*>& p1, Particle* p2){
 
-/*
- *   Ho modificato un po' quanto mi avevi suggerito di fare! In particolare ora
- *   vedo prima se la soglia più bassa viene raggiunta (ovvero quella necessaria
- *   per la produzione di coppie: 10 MeV) perché, se non è raggiunta questa, non
- *   verrà raggiunta neanche quella più alta (bremsstrahlung: 88 MeV).
- *   Se è raggiunta, vedo se p1 è un gamma o no. Se NON è un gamma devo porre
- *   allora la soglia per la bremsstrahlung (che è più alta). Ho fatto queste
- *   modifiche perché come avevi suggerito tu non si teneva in conto il fatto
- *   che threshold_g != threshold_ep.
- */
-
-		if(energy > threshold_g){
+		if(energy > g_threshold[(int)ptype]){
 
 			double phi = gRandom->Rndm()*2.*TMath::Pi();
 			double theta = 0.;
 			double r = h * TMath::Sin(theta);
 			if(ptype == PGAMMA){
-				//theta = ...
+				theta = (g_masses[(int)PELECTRON]*g_c2)/energy;
 				p1.push_back(new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false));
 				p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
 			}
 			else{
-				if(energy > threshold_ep){
-					//theta = ...
+				if(energy > g_threshold[(int)ptype]){
+					theta = (g_masses[(int)ptype]*g_c2)/energy;
 					p1.push_back(new Particle(PGAMMA, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false));
 			  	p2 = NULL;
 					energy *= 0.5;

@@ -37,9 +37,6 @@ class Particle : public TObject{
 	private:
 		double energy; // MeV
 		bool is_primary;
-		const double threshold_g = 10.; // Soglia in MeV per i gamma (g) per fare produzione di coppia.
-		//ottenuto ad occhio dai grafici di probabilità di interazione di gamma
-		const double threshold_ep = 88.05; // Soglia in MeV per gli elettroni/positroni (ep) per fare bremmstrahlung.
 		PType ptype; // Gamma, Electron, Positron
 		Vector3D position;
 		Vector3D old_position;
