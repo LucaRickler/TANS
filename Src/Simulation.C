@@ -34,9 +34,10 @@ void EMShower (int seed = 42, double init_energy) {
     h = ComputeH(dh);
     id2 = (id+1)%2;
     for(int i = 0; i < all_particles[id].size(); i++) {
-      Particle *p1, *p2, *p = all_particles[id][i];
+      vector<Particle*> p1;
+      Particle *p2, *p = all_particles[id][i];
       if(p->Divide(h, p1, p2)){
-        all_particles[id2].push_back(p1);
+        all_particles[id2].push_back(p1); //modifica
         if(p2 != NULL) {
           all_particles[id2].push_back(p2);
           delete p;

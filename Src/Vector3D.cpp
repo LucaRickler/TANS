@@ -58,6 +58,13 @@ Vector3D& Vector3D::operator+ (const Vector3D& other) {
 
 //---------------------------------------------------------------------------//
 
+Vector3D& Vector3D::operator+= (const Vector3D& other) {
+  *this = *this + other;
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
 Vector3D& Vector3D::operator- (const Vector3D& other) {
   double x = GetX() - other.GetX();
   double y = GetY() - other.GetY();
