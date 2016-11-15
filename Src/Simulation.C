@@ -18,7 +18,7 @@ double ComputeH(double h) {
   return 0.;
 }
 
-void EMShower (int seed = 42, double init_energy) {
+void EMShower (double init_energy, int seed = 42) {
   vector<Particle*> *all_particles = new vector<Particle*>[2]();
 
   all_particles[0] = vector<Particle*>();
@@ -34,16 +34,23 @@ void EMShower (int seed = 42, double init_energy) {
     h = ComputeH(dh);
     id2 = (id+1)%2;
     for(int i = 0; i < all_particles[id].size(); i++) {
-      vector<Particle*> p1;
+      Particle** p1;
       Particle *p2, *p = all_particles[id][i];
-      if(p->Divide(h, p1, p2)){
-        all_particles[id2].push_back(p1); //modifica
+      int n_p1;
+      if(p->Divide(h, dh, p1, n_p1, p2)){
+        for(int j = 0; j < n_p1; j++)
+          all_particles[id2].push_back(p1[j]); //modifica
         if(p2 != NULL) {
           all_particles[id2].push_back(p2);
           delete p;
         } else {
           all_particles[id2].push_back(p);
         }
+      } else {
+        if(p->Propagate(h))
+          all_particles[id2].push_back(p);
+        else
+          delete p;
       }
     }
     //Raccolgo i dati
