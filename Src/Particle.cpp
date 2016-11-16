@@ -109,7 +109,7 @@ double Particle::BSEnergy() {
 	*args = this->energy;
 	energy_extractor.SetFArgs(args,NULL,NULL);
 
-	//CONTROLLA CHE XMIN ABBIA SENSO
+	//CONTROLLA CHE Xmin ABBIA SENSO
 	energy_extractor.SetInterval(0., this->energy);
 
 	double energy_gamma = energy_extractor.Rndm();
