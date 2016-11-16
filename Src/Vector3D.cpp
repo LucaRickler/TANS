@@ -76,6 +76,19 @@ Vector3D& Vector3D::operator- (const Vector3D& other) {
 
 //---------------------------------------------------------------------------//
 
+Vector3D& Vector3D::operator* (const double& a) {
+  return Vector3D(this->r * a, this->phi, this->z * a);
+}
+
+//---------------------------------------------------------------------------//
+
+Vector3D& Vector3D::operator*= (const double& a) {
+  *this = *this * a;
+  return *this;
+}
+
+//---------------------------------------------------------------------------//
+
 const double Vector3D::GetTheta() const {
   return TMath::ATan2(GetR(),GetZ());
 }

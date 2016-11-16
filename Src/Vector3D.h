@@ -16,6 +16,8 @@ public:
   Vector3D& operator+ (const Vector3D& v);
   Vector3D& operator+= (const Vector3D& v);
   Vector3D& operator- (const Vector3D& v);
+  Vector3D& operator* (const double& a);
+  Vector3D& operator*= (const double& a);
 
   const double GetR() const {return this->r;}
   const double GetPhi() const {return this->phi;}

@@ -5,6 +5,8 @@
 #include "Constants.h"
 #include <TRandom3.h>
 #include <TVector.h>
+#include "InportanceRandom.h"
+#include <TMath.h>
 
 enum PType {
 	PGAMMA = 0,
@@ -13,19 +15,23 @@ enum PType {
 	NUMBER_OF_PARTICLES
 };
 
-// Da qualche parte ci sarà un array di double così:
-/*
- *   double *masses = new double[NUMBER_OF_PARTICLES]
- *   masses[(int)PGAMMA] = 0.0 // masse espresse in MeV/c^2
- *   masses[(int)PELECTRON] = masses[(int)PPOSITRON] = 0.511 // masse espresse in MeV/c^2
- */
-// Devo decidere come e dove metterlo. Probabilmente una classe di costanti.
+double BSCrossSection(double* x, double* par) {
+	return 4./3./x[0] - 4./3./par[0] + x[0]/par[0]/par[0];
+}
+
+double BSCrossSectionMajor(double* x, double* par) {
+	return 4./3./x[0];
+}
+
+double BSCrossSectionMajorInverse(double* x, double* par) {
+	return TMath::Exp(3.*x[0]/4 - 3./4.);
+}
 
 class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, double dh, Particle** p1, int& n_p1, Particle* p2); // Splitting della particella
+		bool Divide(double h, double dh, vector<Particle*>& p1,, Particle* p2); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
 		const double GetEnergy() const {return energy;}
 		const PType GetPType() const {return ptype;}
@@ -40,12 +46,15 @@ class Particle : public TObject{
 		PType ptype; // Gamma, Electron, Positron
 		Vector3D position;
 		Vector3D old_position;
-		double current_position;
+		Vector3D delta_pos;
+		double lcm;
 		Vector3D direction;
 
 		double LCM(double, double);
-		int NumberOfPhotonsBS(double h, double dh);
 		double BSEnergy();
+		Particle* BSDecay(double h, double dh);
+
+		InportanceRandom energy_extractor;
 
 		ClassDef(Particle, 1)
 };

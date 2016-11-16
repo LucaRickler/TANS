@@ -14,7 +14,7 @@
 //#include "Presentation.h"
 #endif
 
-double ComputeH(double h) {
+double ComputeH(double dh) {
   return 0.;
 }
 
@@ -34,12 +34,11 @@ void EMShower (double init_energy, int seed = 42) {
     h = ComputeH(dh);
     id2 = (id+1)%2;
     for(int i = 0; i < all_particles[id].size(); i++) {
-      Particle** p1;
+      vector<Particle*> p1,;
       Particle *p2, *p = all_particles[id][i];
-      int n_p1;
-      if(p->Divide(h, dh, p1, n_p1, p2)){
-        for(int j = 0; j < n_p1; j++)
-          all_particles[id2].push_back(p1[j]); //modifica
+      if(p->Divide(h, dh, p1, p2)){
+        for(int j = 0; j < p1.size(); j++)
+          all_particles[id2].push_back(p1[j]);
         if(p2 != NULL) {
           all_particles[id2].push_back(p2);
           delete p;
