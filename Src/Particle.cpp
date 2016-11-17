@@ -12,6 +12,7 @@ Particle::Particle() : TObject() {
 		this->is_primary = false;
 		this->lcm = 0.;
 		this->delta_pos = Vector3D();
+		this->energy_extractor(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
 }
 
 //---------------------------------------------------------------------------//
@@ -26,8 +27,7 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 		this->is_primary = primary;
 		this->lcm = 0.;
 		this->delta_pos = Vector3D();
-		//CONTROLLA CHE XMIN ABBIA SENSO
-		this->energy_extractor(BSCrossSection, NULL, 0., energy, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
+		this->energy_extractor(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
 }
 
 //---------------------------------------------------------------------------//
@@ -105,12 +105,13 @@ bool Particle::BSDecay(double h, double dh, Particle* out_gamma) {
 //---------------------------------------------------------------------------//
 
 double Particle::BSEnergy() {
-	double *args = new double[1];
-	*args = this->energy;
-	energy_extractor.SetFArgs(args,NULL,NULL);
+	double *args_f = new double[1];
+	*args_f = this->energy;
 
-	//CONTROLLA CHE Xmin ABBIA SENSO
-	energy_extractor.SetInterval(0., this->energy);
+	double *args_f_inv = new double[2];
+	args_f_inv[0] = g_gamma_bs_min_energy;
+	args_f_inv[1] = this->energy;
+	energy_extractor.SetFArgs(args_f,NULL,args_f_inv);
 
 	double energy_gamma = energy_extractor.Rndm();
 

@@ -5,22 +5,19 @@ ClassImp(InportanceRandom)
 InportanceRandom::InportanceRandom() : TRandom3(),
                                        func(), args_f(NULL),
                                        fbig(), args_fbig(NULL),
-                                       fbig_inv(), args_fbig_inv(NULL),
-                                       xmin(0), xmax(0) {}
+                                       fbig_inv(), args_fbig_inv(NULL) {}
 
 //---------------------------------------------------------------------------//
 
-InportanceRandom::InportanceRandom(std::function<double(double *, double *)> f,
-                                   double * args_f, double xmin, double xmax,
-                                   std::function<double(double *, double *)> fbig,
-                                   double * args_fbig) : TRandom3(seed) {
+InportanceRandom::InportanceRandom(std::function<double(double *, double *)> f, double * args_f,
+                                   std::function<double(double *, double *)> fbig, double * args_fbig,
+                                   std::function<double(double *, double *)> fbig_inv, double * args_fbig_inv) : TRandom3() {
   this->func = f;
   this->args_f = args_f;
   this->fbig = fbig;
   this->args_fbig = args_fbig;
   this->fbig_inv = fbig_inv;
   this->args_fbig_inv = args_fbig_inv;
-  SetInterval(xmin,xmax);
 }
 
 //---------------------------------------------------------------------------//
@@ -40,19 +37,12 @@ Double_t InportanceRandom::Rndm() {
     do {
       u = gRandom->Rndm();
       x = fbig_inv(&u, args_fbig_inv);
-      y = gRandom->Rndm()*fbig(&x, args_list);
-    } while(y >= func(&x, args_list));
+      y = gRandom->Rndm()*fbig(&x, args_fbig);
+    } while(y >= func(&x, args_f));
 
     return x;
   }
   return 0.;
-}
-
-//---------------------------------------------------------------------------//
-
-void InportanceRandom::SetInterval(double xmin, double xmax) {
-  this->xmin = xmin;
-  this->xmax = xmax;
 }
 
 //---------------------------------------------------------------------------//

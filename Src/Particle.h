@@ -24,7 +24,7 @@ double BSCrossSectionMajor(double* x, double* par) {
 }
 
 double BSCrossSectionMajorInverse(double* x, double* par) {
-	return TMath::Exp(3.*x[0]/4 - 3./4.);
+	return TMath::Exp(x[0]*TMath::Log(par[1]) - (x[0] + 1)*TMath::Log(par[0]));
 }
 
 class Particle : public TObject{
