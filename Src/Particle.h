@@ -63,7 +63,7 @@ class Particle : public TObject{
 		double LCM(double, double);
 		double BSEnergy();
 		bool BSDecay(double h, double dh, Particle* out_gamma);
-
+		bool CoupleGeneration(double h, double dh, Particle* p1, Particle* p2);
 		InportanceRandom energy_extractor;
 
 		ClassDef(Particle, 1)

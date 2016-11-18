@@ -5,7 +5,7 @@
 #include "../Src/Particle.h"
 #endif
 
-void ParticleTest (int seed = 42) {
+void TestParticle (int seed = 42) {
   gRandom->SetSeed(seed);
   const int samples = 1.e6;
 
