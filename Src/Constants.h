@@ -16,6 +16,8 @@ const double Na = 6.022e+23;
 
 const double Z_mean = 14.46;
 
+const double g_gamma_bs_min_energy = 1.e-3; // MeV
+
 const double g_masses[] = {
   g_mass_gamma,
   g_mass_electron,
