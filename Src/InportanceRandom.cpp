@@ -2,7 +2,7 @@
 
 ClassImp(InportanceRandom)
 
-InportanceRandom::InportanceRandom() : TRandom3(),
+InportanceRandom::InportanceRandom() : TObject(),
                                        func(), args_f(NULL),
                                        fbig(), args_fbig(NULL),
                                        fbig_inv(), args_fbig_inv(NULL) {}
@@ -11,7 +11,7 @@ InportanceRandom::InportanceRandom() : TRandom3(),
 
 InportanceRandom::InportanceRandom(std::function<double(double *, double *)> f, double * args_f,
                                    std::function<double(double *, double *)> fbig, double * args_fbig,
-                                   std::function<double(double *, double *)> fbig_inv, double * args_fbig_inv) : TRandom3() {
+                                   std::function<double(double *, double *)> fbig_inv, double * args_fbig_inv) : TObject() {
   this->func = f;
   this->args_f = args_f;
   this->fbig = fbig;

@@ -47,13 +47,10 @@ Vector3D& Vector3D::operator= (const Vector3D& other) {
 
 //---------------------------------------------------------------------------//
 
-Vector3D& Vector3D::operator+ (const Vector3D& other) {
+Vector3D Vector3D::operator+ (const Vector3D& other) {
   double x = GetX() + other.GetX();
   double y = GetY() + other.GetY();
-  this->r = TMath::Sqrt(x*x + y*y);
-  this->phi = TMath::ATan2(y,x);
-  this->z += other.GetZ();
-  return *this;
+  return Vector3D(TMath::Sqrt(x*x + y*y), TMath::ATan2(y,x), GetZ() + other.GetZ());
 }
 
 //---------------------------------------------------------------------------//
@@ -65,13 +62,10 @@ Vector3D& Vector3D::operator+= (const Vector3D& other) {
 
 //---------------------------------------------------------------------------//
 
-Vector3D& Vector3D::operator- (const Vector3D& other) {
+Vector3D Vector3D::operator- (const Vector3D& other) {
   double x = GetX() - other.GetX();
   double y = GetY() - other.GetY();
-  this->r = TMath::Sqrt(x*x + y*y);
-  this->phi = TMath::ATan2(y,x);
-  this->z -= other.GetZ();
-  return *this;
+  return Vector3D(TMath::Sqrt(x*x + y*y), TMath::ATan2(y,x), GetZ() - other.GetZ());
 }
 
 //---------------------------------------------------------------------------//

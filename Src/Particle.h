@@ -41,7 +41,7 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, double dh, vector<Particle*>& p1, Particle* p2); // Splitting della particella
+		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
 		const double GetEnergy() const {return energy;}
 		const PType GetPType() const {return ptype;}
@@ -62,8 +62,8 @@ class Particle : public TObject{
 
 		double LCM(double, double);
 		double BSEnergy();
-		bool BSDecay(double h, double dh, Particle* out_gamma);
-		bool CoupleGeneration(double h, double dh, Particle* p1, Particle* p2);
+		bool BSDecay(double h, double dh, Particle& out_gamma);
+		bool CoupleGeneration(double h, double dh, Particle& p1, Particle& p2);
 		InportanceRandom energy_extractor;
 
 		ClassDef(Particle, 1)
