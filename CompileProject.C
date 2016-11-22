@@ -6,7 +6,8 @@
 
 enum Tests {
   InportanceRandomTest = 0,
-  ParticleTest
+  ParticleTest,
+  BSEnergyTest
 };
 
 void CompileSimulation() {
@@ -28,5 +29,10 @@ void CompileTest(Tests test_number) {
       gROOT->ProcessLine(".L Src/InportanceRandom.cpp+");
       gROOT->ProcessLine(".L UnitTests/InportanceRandom_test.C+");
       break;
+    case BSEnergyTest:
+      gROOT->ProcessLine(".L Src/Vector3D.cpp+");
+      gROOT->ProcessLine(".L Src/InportanceRandom.cpp+");
+      gROOT->ProcessLine(".L Src/Particle.cpp+");
+      gROOT->ProcessLine(".L UnitTests/BSEnergy_test.C+");
   }
 }

@@ -6,7 +6,7 @@
 #include <TMath.h>
 #include <functional>
 
-class InportanceRandom : public TRandom3 {
+class InportanceRandom : public TObject {
 public:
   InportanceRandom();
   InportanceRandom(std::function<double(double *, double *)> f, double * args_f,

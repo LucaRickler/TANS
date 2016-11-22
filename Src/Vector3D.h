@@ -12,9 +12,9 @@ public:
   Vector3D(const Vector3D& v);
   ~Vector3D(){}
   Vector3D& operator= (const Vector3D& v);
-  Vector3D& operator+ (const Vector3D& v);
+  Vector3D operator+ (const Vector3D& v);
   Vector3D& operator+= (const Vector3D& v);
-  Vector3D& operator- (const Vector3D& v);
+  Vector3D operator- (const Vector3D& v);
   Vector3D operator* (const double& a);
   Vector3D& operator*= (const double& a);
 

@@ -32,32 +32,29 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Divide(double h, double dh, vector<Particle*>& p1, Particle* p2){
+bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2){
 		if(energy > g_threshold[(int)ptype]){
-			double theta = 0.;
-
 			if(ptype == PGAMMA){
-				Particle* electron, *bs_gamma, *dummy;
+				Particle electron, bs_gamma;
+				Particle dummy;
 				if(CoupleGeneration(h,dh,electron,p2)){
 					p1.push_back(electron);
-					electron->Divide(h,dh,p1,dummy); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
-					p2->Divide(h,dh,p1,dummy);
+					electron.Divide(h,dh,p1,dummy); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
+					p2.Divide(h,dh,p1,dummy);
 					return true;
 				}
-			}
-			else{
-				Particle* bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
+			} else {
+				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
 				while(BSDecay(h,dh,bs_gamma)) {
-					if(!bs_gamma->Divide(h,dh,p1,p2))
+					//if(!bs_gamma.Divide(h,dh,p1,p2))
 						p1.push_back(bs_gamma); //Caso senza produzione di coppia
-					else {
-						p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
-						delete bs_gamma;
-					}
+					//else {
+					//	p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
+					//}
 					return_state = true;
 				}
-				p2 = NULL;
+				//p2 = NULL;
 
 				return return_state;
 			}
@@ -89,7 +86,7 @@ double Particle::LCM(double h, double z_top) {
 
 //---------------------------------------------------------------------------//
 
-bool Particle::BSDecay(double h, double dh, Particle* out_gamma) {
+bool Particle::BSDecay(double h, double dh, Particle& out_gamma) {
 	if(energy > g_threshold[(int)ptype]) {
 		if(old_position.GetZ() > h) {
 			double lambda = gRandom->Exp(1.);
@@ -106,7 +103,7 @@ bool Particle::BSDecay(double h, double dh, Particle* out_gamma) {
 		double r = h * TMath::Tan(theta);
 		double gamma_energy = BSEnergy();
 		direction += Vector3D(r, TMath::Pi()+phi, h, true);
-		out_gamma = new Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		out_gamma = Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 		return true;
 	}
 	return false;
@@ -123,16 +120,18 @@ double Particle::BSEnergy() {
 	args_f_inv[1] = this->energy;
 	energy_extractor.SetFArgs(args_f,NULL,args_f_inv);
 
-	double energy_gamma = energy_extractor.Rndm();
-
+	double energy_gamma;
+	do {
+		 energy_gamma = energy_extractor.Rndm();
+	} while (energy_gamma >= this->energy);
 	this->energy -= energy_gamma;
 	return energy_gamma;
 }
 
 //---------------------------------------------------------------------------//
 
-bool Particle::CoupleGeneration(double h, double dh, Particle* p1, Particle* p2){
-	if(this->energy > g_threshold[(int)this->ptype]) {
+bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2){
+	if(this->energy > g_threshold[(int)PGAMMA]) {
 
 		if(old_position.GetZ() > h) {
 			double lambda = gRandom->Exp(1.);
@@ -145,10 +144,13 @@ bool Particle::CoupleGeneration(double h, double dh, Particle* p1, Particle* p2)
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();
-		double theta = (g_masses[(int)PELECTRON]*g_c2)/energy;
+		double theta = TMath::Exp(TMath::Log(g_masses[(int)PELECTRON]) + TMath::Log(g_c2) - TMath::Log(energy));
 		double r = h * TMath::Tan(theta);
-		p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
-		p2 = new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
+		//new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
+		p1 =  Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		p2 =  Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		//if(!p1) printf("Error\n");
+		//if(!p2) printf("Error\n");
 		return true;
 	}
 	return false;
