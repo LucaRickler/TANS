@@ -18,19 +18,19 @@ public:
   Vector3D operator* (const double& a);
   Vector3D& operator*= (const double& a);
 
-  const double GetR() const {return this->r;}
-  const double GetPhi() const {return this->phi;}
-  const double GetTheta() const;
-  const double GetX() const;
-  const double GetY() const;
-  const double GetZ() const {return this->z;}
-  const double GetNorm() const;
+  double GetR() const {return this->r;}
+  double GetPhi() const {return this->phi;}
+  double GetTheta() const;
+  double GetX() const;
+  double GetY() const;
+  double GetZ() const {return this->z;}
+  double GetNorm() const;
   Vector3D GetNormalized() const;
 
-  static const double Dot(const Vector3D& v1, const Vector3D& v2);
-  const double Dot(const Vector3D& v);
-  static const Vector3D Cross(const Vector3D& v1, const Vector3D& v2);
-  const Vector3D Cross(const Vector3D& v);
+  static double Dot(const Vector3D& v1, const Vector3D& v2);
+  double Dot(const Vector3D& v);
+  static Vector3D Cross(const Vector3D& v1, const Vector3D& v2);
+  Vector3D Cross(const Vector3D& v);
 
 private:
   double r; // m

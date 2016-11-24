@@ -24,7 +24,7 @@ void TestParticle (int seed = 42) {
     printf("E: %e\n", E);
     bool state = gamma.Divide(-1,100,p1,p2);
     if(state) {
-      for (int i = 0; i < p1.size(); i++) {
+      for (UInt_t i = 0; i < p1.size(); i++) {
         cout << "p1[" << i << "]: theta " << p1[i].GetDirection().GetTheta() << ", E " << p1[i].GetEnergy() << endl;
         couple_production_theta->Fill(p1[i].GetDirection().GetTheta());
         couple_production_energy->Fill(p1[i].GetEnergy());
