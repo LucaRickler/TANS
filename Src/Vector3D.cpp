@@ -83,25 +83,25 @@ Vector3D& Vector3D::operator*= (const double& a) {
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::GetTheta() const {
+double Vector3D::GetTheta() const {
   return TMath::ATan2(GetR(),GetZ());
 }
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::GetX() const {
+double Vector3D::GetX() const {
   return GetR()*TMath::Cos(GetPhi());
 }
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::GetY() const {
+double Vector3D::GetY() const {
   return GetR()*TMath::Sin(GetPhi());
 }
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::GetNorm () const {
+double Vector3D::GetNorm () const {
   return TMath::Sqrt(GetR()*GetR() + GetZ()*GetZ());
 }
 
@@ -115,19 +115,19 @@ Vector3D Vector3D::GetNormalized () const {
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::Dot(const Vector3D& v1, const Vector3D& v2){
+double Vector3D::Dot(const Vector3D& v1, const Vector3D& v2){
   return v1.GetX()*v2.GetX() + v1.GetY()*v2.GetY() + v1.GetZ()*v2.GetZ();
 }
 
 //---------------------------------------------------------------------------//
 
-const double Vector3D::Dot(const Vector3D& v){
+double Vector3D::Dot(const Vector3D& v){
   return Dot(*this, v);
 }
 
 //---------------------------------------------------------------------------//
 
-const Vector3D Vector3D::Cross(const Vector3D& v1, const Vector3D& v2){
+Vector3D Vector3D::Cross(const Vector3D& v1, const Vector3D& v2){
 
    double x = v1.GetX()*v2.GetY() - v1.GetY()*v2.GetX();
    double y = -v1.GetZ()*v2.GetY() + v1.GetY()*v2.GetZ();
@@ -141,7 +141,7 @@ const Vector3D Vector3D::Cross(const Vector3D& v1, const Vector3D& v2){
 
 //---------------------------------------------------------------------------//
 
-const Vector3D Vector3D::Cross(const Vector3D& v){
+Vector3D Vector3D::Cross(const Vector3D& v){
   return Cross(*this, v);
 }
 

@@ -43,9 +43,9 @@ class Particle : public TObject{
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
 		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
-		const double GetEnergy() const {return energy;}
-		const PType GetPType() const {return ptype;}
-		const bool IsPrimary() const {return is_primary;}
+		double GetEnergy() const {return energy;}
+		PType GetPType() const {return ptype;}
+		bool IsPrimary() const {return is_primary;}
 		Vector3D GetPositon() const {return position;}
 		Vector3D GetOldPositon() const {return old_position;}
 		Vector3D GetDirection() const {return direction;}
