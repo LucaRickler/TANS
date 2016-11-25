@@ -25,21 +25,23 @@ void TestEnergy(double E, int seed = 42) {
 
   char title[50];
   sprintf(title,"E: %e", E);
-  TH1D* h = new TH1D(title, title, 1000, Emin, E);
+  TH1D* h = new TH1D(title, title, 10000, Emin, Emax);
 
 
   for(int i = 0; i < samples; i++)
     h->Fill(rnd.Rndm());
 
-  TH1D* exact = new TH1D("exact", "exact", 1000, Emin, E);
+  TH1D* exact = new TH1D("exact", "exact", 10000, Emin, Emax);
   for(int i = 0; i < 1000; i++){
     double x = (Emin + (0.5 + i)*step);
     exact->SetBinContent(i,BSCrossSection(&x,&E));
   }
 
-  h->Scale(1./samples, "width");
-  new TCanvas();
-  h->DrawCopy();
+  h->Scale(1./h->Integral(), "width");
+  TCanvas* canvas = new TCanvas();
+  canvas->SetLogx();
+  canvas->SetLogy();
+  h->DrawCopy("histo");
 
   exact->Scale(1./exact->Integral(), "width");
   exact->Draw("histosame");

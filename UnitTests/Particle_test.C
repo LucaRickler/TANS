@@ -17,24 +17,24 @@ void TestParticle (int seed = 42) {
   TCanvas *couple_production_canvas_energy = new TCanvas();
 
   double step = (Emax - Emin) / samples;
-  for(double E = Emin; E < Emax; E*=1.5){
-    Particle gamma, p2;
-    vector<Particle> p1 = vector<Particle>();
-    gamma = Particle(PGAMMA, E, Vector3D(0.,0.,1), Vector3D(0.,0.,1), true);
+  for(double E = Emin; E < Emax; E*=2.0){
+    Particle *gamma, *p2;
+    vector<Particle*> p1 = vector<Particle*>();
+    gamma = new Particle(PGAMMA, E, Vector3D(0.,0.,1), Vector3D(0.,0.,1), true);
     printf("E: %e\n", E);
-    bool state = gamma.Divide(-1,100,p1,p2);
+    bool state = gamma->Divide(-1,100,p1,&p2);
     if(state) {
       for (UInt_t i = 0; i < p1.size(); i++) {
-        cout << "p1[" << i << "]: theta " << p1[i].GetDirection().GetTheta() << ", E " << p1[i].GetEnergy() << endl;
-        couple_production_theta->Fill(p1[i].GetDirection().GetTheta());
-        couple_production_energy->Fill(p1[i].GetEnergy());
+        cout << "p1[" << i << "]: theta " << p1[i]->GetDirection().GetTheta() << ", E " << p1[i]->GetEnergy() << endl;
+        couple_production_theta->Fill(p1[i]->GetDirection().GetTheta());
+        couple_production_energy->Fill(p1[i]->GetEnergy());
         //if(p2) delete p2;
         //if(p1[0]) delete p1[0];
-        //delete &(p1[i]);
+        delete p1[i];
       }
-      //p1.clear();
+      p1.clear();
     }
-  //  delete gamma;
+    delete gamma;
   }
 
   couple_production_canvas_theta->cd();
