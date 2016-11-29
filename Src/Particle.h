@@ -22,17 +22,37 @@ enum PType {
 
 double BSCrossSection(double* x, double* par) {
 	//Sezione d'urto per brehmsstrahlung
-	return 4./3./x[0] - 4./3./par[0] + x[0]/par[0]/par[0];
+	double xx = x[0];
+	//return 4./3./xx - 4./3./par[0] + xx/par[0]/par[0];
+	//return x[0] + (1. - x[0])*(4./3. + 2.*bs_b)/x[0];
+	return par[0]/xx + 0.75*xx/par[0] - 1.;
 }
 
 double BSCrossSectionMajor(double* x, double* par) {
 	//Maggiorante della sezione d'urto per brehmsstrahlung
-	return 4./3./x[0];
+	double xx = x[0];
+	//return 4./3./xx;
+	return par[0]/xx;
 }
 
 double BSCrossSectionMajorInverse(double* x, double* par) {
 	//Inverso dell'integrale del maggiorante della sezione d'urto per brehmsstrahlung
-	return TMath::Exp(x[0]*TMath::Log(par[1]) - (x[0] + 1)*TMath::Log(par[0]));
+	double xx = x[0];
+	//return TMath::Exp(xx*TMath::Log(par[1]) - (xx + 1)*TMath::Log(par[0]));
+	return TMath::Exp(xx*(TMath::Log(par[1]) - TMath::Log(par[0])));
+}
+
+double NGamma(double*x, double*par) {
+	//Numero di gamma emessi per BS tra Kmin (par[0]) e Kmax (par[1]) in una lunghezza di radiazione da un elettrone di energia E (x[0])
+	return (4./3. * TMath::Log(par[1]/par[0] - 4.*(par[1] - par[0])/3./x[0] + 0.5*(par[1]*par[1] - par[0]*par[0])/x[0]/x[0]));
+}
+
+//---------------------------------------------------------------------------//
+//																			X0																	 //
+//---------------------------------------------------------------------------//
+
+double X0(PType ptype) {
+	return 1.;
 }
 
 //---------------------------------------------------------------------------//
@@ -41,7 +61,7 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2); // Splitting della particella
+		bool Divide(double h, double dh, vector<Particle*>& p1, Particle** p2, int& counter); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
 		double GetEnergy() const {return energy;}
 		PType GetPType() const {return ptype;}
@@ -61,9 +81,10 @@ class Particle : public TObject{
 		Vector3D direction;
 
 		double LCM(double, double);
+		double BSLCM();
 		double BSEnergy();
-		bool BSDecay(double h, double dh, Particle& out_gamma);
-		bool CoupleGeneration(double h, double dh, Particle& p1, Particle& p2);
+		bool BSDecay(double h, double dh, Particle** out_gamma, int& counter);
+		bool CoupleGeneration(double h, double dh, Particle** p1, Particle** p2, int& counter);
 		InportanceRandom energy_extractor;
 
 		ClassDef(Particle, 1)

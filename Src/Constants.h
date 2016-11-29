@@ -30,4 +30,6 @@ const double g_threshold[] = {
   g_threshold_positron
 };
 
+const double bs_b = 0.0122;
+
 #endif

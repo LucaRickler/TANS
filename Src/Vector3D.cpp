@@ -3,7 +3,7 @@ ClassImp(Vector3D)
 
 //---------------------------------------------------------------------------//
 
-Vector3D::Vector3D(){
+Vector3D::Vector3D() : TObject(){
   this->r = 0.0;
   this->phi = 0.0;
   this->z = 0.0;
@@ -11,7 +11,7 @@ Vector3D::Vector3D(){
 
 //---------------------------------------------------------------------------//
 
-Vector3D::Vector3D(double r, double phi, double z, bool versor){
+Vector3D::Vector3D(double r, double phi, double z, bool versor) : TObject(){
   this->r = (r >= 0.0 ? r : 0.0);
   while(phi < 0.0)
     phi += 2.0*TMath::Pi();
@@ -26,7 +26,7 @@ Vector3D::Vector3D(double r, double phi, double z, bool versor){
 
 //---------------------------------------------------------------------------//
 
-Vector3D::Vector3D(const Vector3D& other){
+Vector3D::Vector3D(const Vector3D& other) : TObject(other){
   this->r = other.r;
   this->phi = other.phi;
   this->z = other.z;

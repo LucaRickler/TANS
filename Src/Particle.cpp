@@ -32,25 +32,26 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2){
+bool Particle::Divide(double h, double dh, vector<Particle*>& p1, Particle** p2, int& counter){
 		if(energy > g_threshold[(int)ptype]){
-			if(ptype == PGAMMA){
-				Particle electron, bs_gamma;
-				Particle dummy;
-				if(CoupleGeneration(h,dh,electron,p2)){
+			/*if(ptype == PGAMMA){
+				Particle*electron, *bs_gamma;
+				Particle* dummy;
+				if(CoupleGeneration(h,dh,&electron,p2,counter)){
 					p1.push_back(electron);
-					electron.Divide(h,dh,p1,dummy); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
-					p2.Divide(h,dh,p1,dummy);
+					electron->Divide(h,dh,p1,&dummy,counter); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
+					//p2->Divide(h,dh,p1,&dummy,counter);
 					return true;
 				}
-			} else {
-				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
+			} else*/ {
+				Particle *bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
-				while(BSDecay(h,dh,bs_gamma)) {
+				while(BSDecay(h,dh,&bs_gamma,counter)) {
+					if(bs_gamma)
 					//if(!bs_gamma.Divide(h,dh,p1,p2))
 						p1.push_back(bs_gamma); //Caso senza produzione di coppia
 					//else {
-					//	p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
+					//	p1.push_back(*p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
 					//}
 					return_state = true;
 				}
@@ -86,10 +87,10 @@ double Particle::LCM(double h, double z_top) {
 
 //---------------------------------------------------------------------------//
 
-bool Particle::BSDecay(double h, double dh, Particle& out_gamma) {
+bool Particle::BSDecay(double h, double dh, Particle** out_gamma, int &counter) {
 	if(energy > g_threshold[(int)ptype]) {
 		if(old_position.GetZ() > h) {
-			double lambda = gRandom->Exp(1.);
+			double lambda = BSLCM();//gRandom->Exp(1.);
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
 		} else
@@ -99,11 +100,15 @@ bool Particle::BSDecay(double h, double dh, Particle& out_gamma) {
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();
-		double theta = (g_masses[(int)ptype]*g_c2)/energy;
+		double theta = TMath::Exp(TMath::Log(g_masses[(int)PELECTRON]) + TMath::Log(g_c2) - TMath::Log(energy));
 		double r = h * TMath::Tan(theta);
 		double gamma_energy = BSEnergy();
 		direction += Vector3D(r, TMath::Pi()+phi, h, true);
-		out_gamma = Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		++counter;
+		if(gamma_energy >= g_threshold_gamma){
+			*out_gamma = new Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		} else
+			*out_gamma = NULL;
 		return true;
 	}
 	return false;
@@ -130,7 +135,19 @@ double Particle::BSEnergy() {
 
 //---------------------------------------------------------------------------//
 
-bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2){
+double Particle::BSLCM() {
+	static double *energy_limits;
+	if(!energy_limits) {
+		energy_limits = new double[2];
+		energy_limits[0] = g_gamma_bs_min_energy;
+	}
+	energy_limits[1] = this->energy;
+	return X0(this->ptype)/NGamma(&this->energy, energy_limits);
+}
+
+//---------------------------------------------------------------------------//
+
+bool Particle::CoupleGeneration(double h, double dh, Particle** p1, Particle** p2,int& counter){
 	if(this->energy > g_threshold[(int)PGAMMA]) {
 
 		if(old_position.GetZ() > h) {
@@ -147,8 +164,9 @@ bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2)
 		double theta = TMath::Exp(TMath::Log(g_masses[(int)PELECTRON]) + TMath::Log(g_c2) - TMath::Log(energy));
 		double r = h * TMath::Tan(theta);
 		//new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
-		p1 =  Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
-		p2 =  Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		*p1 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		*p2 = new Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		counter += 2;
 		//if(!p1) printf("Error\n");
 		//if(!p2) printf("Error\n");
 		return true;
