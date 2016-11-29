@@ -27,6 +27,7 @@ void InportanceTest (int seed = 42) {
   double step = (xmax - xmin) /100;
 
   InportanceRandom rng = InportanceRandom(f,NULL,g,NULL,h,NULL);
+  rng.SetFArgs(NULL,NULL,NULL);
 
   for(int i = 0; i < samples; i++)
     histo->Fill(rng.Rndm());
