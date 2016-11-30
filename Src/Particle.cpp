@@ -34,25 +34,27 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter){
 		if(energy > g_threshold[(int)ptype]){
-			/*if(ptype == PGAMMA){
+			if(ptype == PGAMMA){
 				Particle electron, bs_gamma;
 				Particle dummy;
 				if(CoupleGeneration(h,dh,electron,p2,counter)){
 					p1.push_back(electron);
-					electron->Divide(h,dh,p1,dummy,counter); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
-					//p2->Divide(h,dh,p1,dummy,counter);
+					electron.Divide(h,dh,p1,dummy,counter); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
+					p2.Divide(h,dh,p1,dummy,counter);
 					return true;
 				}
-			} else*/ {
+			} else {
 				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
 				while(BSEmission(h,dh,bs_gamma,counter)) {
-					if(bs_gamma.GetEnergy() != 0.)
-					//if(!bs_gamma.Divide(h,dh,p1,p2))
-						p1.push_back(bs_gamma); //Caso senza produzione di coppia
-					//else {
-					//	p1.push_back(*p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
-					//}
+					if(bs_gamma.GetEnergy() != 0.) {
+						if(!bs_gamma.Divide(h,dh,p1,p2,counter)) {
+							p1.push_back(bs_gamma); //Caso senza produzione di coppia
+						} else {
+							p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
+							//--counter;
+						}
+					}
 					return_state = true;
 				}
 				//p2 = NULL;
