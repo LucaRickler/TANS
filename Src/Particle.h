@@ -62,7 +62,7 @@ class Particle : public TObject{
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
 		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter); // Splitting della particella
-		bool Propagate(double h); // Trasporto della particella
+		bool Propagate(double h, double dh); // Trasporto della particella
 		double GetEnergy() const {return energy;}
 		PType GetPType() const {return ptype;}
 		bool IsPrimary() const {return is_primary;}
@@ -77,7 +77,7 @@ class Particle : public TObject{
 		Vector3D position;
 		Vector3D old_position;
 		Vector3D delta_pos;
-		double lcm;
+		bool lcm_computed;
 		Vector3D direction;
 
 		double LCM(double, double);

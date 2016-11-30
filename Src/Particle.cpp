@@ -10,7 +10,7 @@ Particle::Particle() : TObject() {
 		this->position = Vector3D();
 		this->old_position = Vector3D();
 		this->is_primary = false;
-		this->lcm = 0.;
+		this->lcm_computed = false;
 		this->delta_pos = Vector3D();
 		//this->energy_extractor = InportanceRandom(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
 }
@@ -26,7 +26,7 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 		this->position = position;
 		this->old_position = position;
 		this->is_primary = primary;
-		this->lcm = 0.;
+		this->lcm_computed = false;
 		this->delta_pos = Vector3D();
 		//this->energy_extractor = InportanceRandom(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
 }
@@ -71,15 +71,18 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Propagate(double h){
+bool Particle::Propagate(double h, double dh){
+	if(energy > g_threshold[(int)ptype])
+		return true;
 	if(ptype == PGAMMA)
 		return false;
-	 if(lcm == 0.)
-	 	lcm = LCM(h,position.GetZ());
-	 old_position = position;
-	 position += direction;
-	 delta_pos += position - old_position;
-	 if(delta_pos.GetNorm() > lcm)
+	 if(!lcm_computed){
+		 old_position = position;
+		 position += direction.GetNormalized() * 0.71*TMath::Power(energy, 1.72);
+		 //delta_pos += position - old_position;
+		 lcm_computed = true;
+	 }
+	 if(position.GetZ() > h + dh)
 		 return false;
 	 return true;
 }
@@ -87,7 +90,7 @@ bool Particle::Propagate(double h){
 //---------------------------------------------------------------------------//
 
 double Particle::LCM(double h, double z_top) {
-	return 0.;
+	return 0.71*TMath::Power(energy, 1.72);
 }
 
 //---------------------------------------------------------------------------//

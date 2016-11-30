@@ -28,6 +28,8 @@ void EMShower (double init_energy, int seed = 42) {
   double h = 0.;
   double dh = 0.1;
   //ComputeH(dh);
+  int max_k = 0;
+  int max = 0.;
 
   TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", 100, 0,10);
   TH1D* energy_loss = new TH1D("Energia rilasicata per strato atmosferico", "Energia rilasicata per strato atmosferico", 100, 0,10);
@@ -38,6 +40,7 @@ void EMShower (double init_energy, int seed = 42) {
   //while (all_particles[id].size() > 0) {
   //while (h < 10) {
   for(int k = 0; k < 100; k++) {
+    cout << "Ciclo #" << k << endl;
     counter = 0;
     energy_lost_here = 0.0;
     id2 = (id+1)%2;
@@ -53,22 +56,28 @@ void EMShower (double init_energy, int seed = 42) {
         } else {
           all_particles[id2].push_back(p);
         }
-      } else {
-        //if(p.Propagate(h))
+        if(p.GetPType() != PGAMMA)
           all_particles[id2].push_back(p);
-        //else
-          //energy_lost_here += p.GetEnergy();
+      } else {
+        if(p.Propagate(h, dh))
+          all_particles[id2].push_back(p);
+        else
+          energy_lost_here += p.GetEnergy();
       }
     }
     //Raccolgo i dati
     particle_count->SetBinContent(k,all_particles[id].size());
+    if(all_particles[id].size() > max)
+      max_k = k;
     energy_loss->SetBinContent(k,energy_lost_here);
     all_particles[id].clear();
     id = id2;
     h = ComputeH(h,dh);
   }
 
+  cout << "Punto di massimo: " << max_k * dh << endl;
   //print dei dati
+  new TCanvas();
   particle_count->Draw();
   new TCanvas();
   energy_loss->Draw();
