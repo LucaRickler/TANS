@@ -42,9 +42,9 @@ double BSCrossSectionMajorInverse(double* x, double* par) {
 	return TMath::Exp(xx*(TMath::Log(par[1]) - TMath::Log(par[0])));
 }
 
-double NGamma(double*x, double*par) {
+double NGamma(double E, double Kmin, double Kmax) {
 	//Numero di gamma emessi per BS tra Kmin (par[0]) e Kmax (par[1]) in una lunghezza di radiazione da un elettrone di energia E (x[0])
-	return (4./3. * TMath::Log(par[1]/par[0] - 4.*(par[1] - par[0])/3./x[0] + 0.5*(par[1]*par[1] - par[0]*par[0])/x[0]/x[0]));
+	return (4./3. * TMath::Log(Kmax/Kmin - 4.*(Kmax - Kmin)/3./E + 0.5*(Kmax*Kmax - Kmin*Kmin)/E/E));
 }
 
 //---------------------------------------------------------------------------//
@@ -61,7 +61,7 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, double dh, vector<Particle*>& p1, Particle** p2, int& counter); // Splitting della particella
+		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter); // Splitting della particella
 		bool Propagate(double h); // Trasporto della particella
 		double GetEnergy() const {return energy;}
 		PType GetPType() const {return ptype;}
@@ -83,12 +83,13 @@ class Particle : public TObject{
 		double LCM(double, double);
 		double BSLCM();
 		double BSEnergy();
-		bool BSDecay(double h, double dh, Particle** out_gamma, int& counter);
-		bool CoupleGeneration(double h, double dh, Particle** p1, Particle** p2, int& counter);
-		InportanceRandom energy_extractor;
+		bool BSEmission(double h, double dh, Particle& out_gamma, int& counter);
+		bool CoupleGeneration(double h, double dh, Particle& p1, Particle& p2, int& counter);
 
 		ClassDef(Particle, 1)
 };
+
+const Particle null_particle();
 
 
 #endif /* PARTICLE_H_ */
