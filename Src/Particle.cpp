@@ -24,6 +24,7 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 	  this->energy = (energy >= 0.0 ? energy : 0.0);
 		this->direction = direction;
 		this->position = position;
+		this->old_position = position;
 		this->is_primary = primary;
 		this->lcm = 0.;
 		this->delta_pos = Vector3D();
@@ -71,6 +72,8 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 //---------------------------------------------------------------------------//
 
 bool Particle::Propagate(double h){
+	if(ptype == PGAMMA)
+		return false;
 	 if(lcm == 0.)
 	 	lcm = LCM(h,position.GetZ());
 	 old_position = position;
@@ -91,7 +94,7 @@ double Particle::LCM(double h, double z_top) {
 
 bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter) {
 	if(energy > g_threshold[(int)ptype]) {
-		if(old_position.GetZ() > h) {
+		if(old_position.GetZ() >= h && position.GetZ() < h + dh) {
 			double lambda = BSLCM();//gRandom->Exp(1.);
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
@@ -157,14 +160,14 @@ double Particle::BSLCM() {
 bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2,int& counter){
 	if(this->energy > g_threshold[(int)PGAMMA]) {
 
-		if(old_position.GetZ() > h) {
+		if(old_position.GetZ() >= h && position.GetZ() < h + dh) {
 			double lambda = (7./9.)*X0(this->ptype);
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
-		} else
-			old_position = position;
+		} //else
+			//old_position = position;
 
-		if(position.GetZ() > h + dh)
+		if(position.GetZ() >= h + dh)
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();

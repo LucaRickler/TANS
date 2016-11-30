@@ -23,17 +23,23 @@ void EMShower (double init_energy, int seed = 42) {
 
   all_particles[0] = vector<Particle>();
   all_particles[1] = vector<Particle>();
-  TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", 10, 0,10);
 
   int counter = 0;
   double h = 0.;
-  double dh = 1.;
+  double dh = 0.1;
   //ComputeH(dh);
-  all_particles[0].push_back(Particle(PGAMMA, init_energy, Vector3D(0.,0.,dh), Vector3D(0.,0.,h), true));
+
+  TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", 100, 0,10);
+  TH1D* energy_loss = new TH1D("Energia rilasicata per strato atmosferico", "Energia rilasicata per strato atmosferico", 100, 0,10);
+  double energy_lost_here = 0.0;
+  all_particles[0].push_back(Particle(PGAMMA, init_energy, Vector3D(0.,0.,1.), Vector3D(0.,0.,h), true));
 
   int id = 0, id2 = 1;
   //while (all_particles[id].size() > 0) {
-  while (h < 10) {
+  //while (h < 10) {
+  for(int k = 0; k < 100; k++) {
+    counter = 0;
+    energy_lost_here = 0.0;
     id2 = (id+1)%2;
     for(int i = 0; i < all_particles[id].size(); i++) {
       vector<Particle> p1;
@@ -48,14 +54,15 @@ void EMShower (double init_energy, int seed = 42) {
           all_particles[id2].push_back(p);
         }
       } else {
-        /*if(p.Propagate(h))
+        //if(p.Propagate(h))
           all_particles[id2].push_back(p);
-        else
-          delete p;*/
+        //else
+          //energy_lost_here += p.GetEnergy();
       }
     }
     //Raccolgo i dati
-    particle_count->SetBinContent(h,all_particles[id2].size());
+    particle_count->SetBinContent(k,all_particles[id].size());
+    energy_loss->SetBinContent(k,energy_lost_here);
     all_particles[id].clear();
     id = id2;
     h = ComputeH(h,dh);
@@ -63,4 +70,6 @@ void EMShower (double init_energy, int seed = 42) {
 
   //print dei dati
   particle_count->Draw();
+  new TCanvas();
+  energy_loss->Draw();
 }
