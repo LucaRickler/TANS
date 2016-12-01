@@ -11,7 +11,7 @@ void TestParticle (int seed = 42) {
 
   double Emin = g_threshold_gamma;
   double Emax = 1.e8;
-  TH1D* couple_production_theta = new TH1D("Gamma Couple Production Theta", "Gamma Couple Production Theta", 1000, 0., 0.5*TMath::Pi());
+  TH1D* couple_production_theta = new TH1D("Gamma Couple Production Theta", "Gamma Couple Production Theta", 1000, 0., 0.1);
   TH1D* couple_production_energy = new TH1D("Gamma Couple Production Energy", "Gamma Couple Production Energy", 1000, Emin, Emax);
   TCanvas *couple_production_canvas_theta = new TCanvas();
   TCanvas *couple_production_canvas_energy = new TCanvas();

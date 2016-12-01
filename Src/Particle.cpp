@@ -108,7 +108,7 @@ bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();
-		double theta = TMath::Exp(TMath::Log(g_masses[(int)PELECTRON]) + TMath::Log(g_c2) - TMath::Log(energy));
+		double theta = g_masses[(int)PELECTRON]/energy;
 		double r = h * TMath::Tan(theta);
 		double gamma_energy = BSEnergy();
 		direction += Vector3D(r, TMath::Pi()+phi, h, true);
@@ -174,7 +174,7 @@ bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2,
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();
-		double theta = TMath::Exp(TMath::Log(g_masses[(int)PELECTRON]) + TMath::Log(g_c2) - TMath::Log(energy));
+		double theta = g_masses[(int)PELECTRON]/energy;
 		double r = h * TMath::Tan(theta);
 		//new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
 		p1 = Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
