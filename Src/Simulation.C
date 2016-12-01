@@ -47,7 +47,7 @@ void EMShower (double init_energy, int seed = 42) {
     for(int i = 0; i < all_particles[id].size(); i++) {
       vector<Particle> p1;
       Particle p2, p = all_particles[id][i];
-      if(p.Divide(h, dh, p1, p2, counter)){
+      if(p.Divide(h, dh, p1, p2, counter,energy_lost_here)){
         for(int j = 0; j < p1.size(); j++)
           all_particles[id2].push_back(p1[j]);
         if(p2.GetEnergy() != 0.) {

@@ -33,23 +33,23 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 
 //---------------------------------------------------------------------------//
 
-bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter){
+bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter, double& energy_lost){
 		if(energy > g_threshold[(int)ptype]){
 			if(ptype == PGAMMA){
 				Particle electron, bs_gamma;
 				Particle dummy;
 				if(CoupleGeneration(h,dh,electron,p2,counter)){
 					p1.push_back(electron);
-					electron.Divide(h,dh,p1,dummy,counter); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
-					p2.Divide(h,dh,p1,dummy,counter);
+					electron.Divide(h,dh,p1,dummy,counter,energy_lost); //loro potrebbero fare BS in [h,h+dh], devo farlo loro fare
+					p2.Divide(h,dh,p1,dummy,counter,energy_lost);
 					return true;
 				}
 			} else {
 				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
-				while(BSEmission(h,dh,bs_gamma,counter)) {
+				while(BSEmission(h,dh,bs_gamma,counter,energy_lost)) {
 					if(bs_gamma.GetEnergy() != 0.) {
-						if(!bs_gamma.Divide(h,dh,p1,p2,counter)) {
+						if(!bs_gamma.Divide(h,dh,p1,p2,counter,energy_lost)) {
 							p1.push_back(bs_gamma); //Caso senza produzione di coppia
 						} else {
 							p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
@@ -95,10 +95,10 @@ double Particle::LCM(double h, double z_top) {
 
 //---------------------------------------------------------------------------//
 
-bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter) {
+bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter, double& energy_lost) {
 	if(energy > g_threshold[(int)ptype]) {
 		if(old_position.GetZ() >= h && position.GetZ() < h + dh) {
-			double lambda = BSLCM();//gRandom->Exp(1.);
+			double lambda = X0(this->ptype)/NGamma(this->energy, g_gamma_bs_min_energy, this->energy);
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
 		} else
@@ -117,6 +117,7 @@ bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter
 			out_gamma =  Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 		} else
 			out_gamma = Particle();
+			energy_lost += gamma_energy;
 		return true;
 	}
 	return false;
@@ -135,6 +136,15 @@ double Particle::BSEnergy() {
 	//InportanceRandom energy_extractor = InportanceRandom(BSCrossSection, args_f, BSCrossSectionMajor, args_f, BSCrossSectionMajorInverse, args_f_inv);
 */
 	double energy_gamma = 0.1*this->energy;
+
+	double k,y;
+
+	do {
+		do {
+			energy_gamma = BSCrossSectionMajorInverse(gRandom->Rndm(), g_gamma_bs_min_energy, this->energy);
+		} while (energy_gamma >= energy);
+		y = gRandom->Rndm()*BSCrossSectionMajor(energy_gamma, this->energy);
+	} while(y >= BSCrossSection(energy_gamma, this->energy));
 	/*do {
 		 energy_gamma = energy_extractor.Rndm();
 	} while (energy_gamma >= this->energy);
@@ -144,18 +154,6 @@ double Particle::BSEnergy() {
 
 	this->energy -= energy_gamma;
 	return energy_gamma;
-}
-
-//---------------------------------------------------------------------------//
-
-double Particle::BSLCM() {
-	//static double energy_limits[2];// = double[2]; //static double[2]?
-	//if(!energy_limits) {
-		//energy_limits = new double[2];
-		//energy_limits[0] = g_gamma_bs_min_energy;
-	//}
-	//energy_limits[1] = this->energy;
-	return X0(this->ptype)/NGamma(this->energy, g_gamma_bs_min_energy, this->energy);
 }
 
 //---------------------------------------------------------------------------//
