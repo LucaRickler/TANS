@@ -1,0 +1,32 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{3}
+\contentsline {subsection}{\numberline {1.1}General Overview}{3}
+\contentsline {subsection}{\numberline {1.2}Solving the problem through a MAS model}{3}
+\contentsline {section}{\numberline {2}Model Design}{4}
+\contentsline {subsection}{\numberline {2.1}Agent types and hierarchy}{4}
+\contentsline {subsection}{\numberline {2.2}Model Work-flow}{5}
+\contentsline {subsection}{\numberline {2.3}Strategies}{5}
+\contentsline {section}{\numberline {3}Implementation}{6}
+\contentsline {subsection}{\numberline {3.1}Classes overview}{6}
+\contentsline {subsection}{\numberline {3.2}Communication protocols}{6}
+\contentsline {subsection}{\numberline {3.3}Global}{8}
+\contentsline {subsection}{\numberline {3.4}Restaurant}{9}
+\contentsline {subsection}{\numberline {3.5}Person}{11}
+\contentsline {section}{\numberline {4}Analysis}{12}
+\contentsline {subsection}{\numberline {4.1}Evaluation update}{12}
+\contentsline {subsection}{\numberline {4.2}Analysing the global knowledge}{12}
+\contentsline {subsection}{\numberline {4.3}First simulation: one restaurant}{13}
+\contentsline {subsection}{\numberline {4.4}Second simulation: many restaurants}{14}
+\contentsline {subsubsection}{\numberline {4.4.1}Randomly choose}{14}
+\contentsline {subsubsection}{\numberline {4.4.2}Person that chooses the best}{14}
+\contentsline {subsection}{\numberline {4.5}Third simulation: a bit more complicated}{16}
+\contentsline {subsection}{\numberline {4.6}Fourth simulation: communication among friends }{16}
+\contentsline {subsubsection}{\numberline {4.6.1}Many friends mean better choice}{17}
+\contentsline {subsection}{\numberline {4.7}Average influx}{19}
+\contentsline {subsection}{\numberline {4.8}Percentage influx}{22}
+\contentsline {subsection}{\numberline {4.9}Further considerations on strategy selection}{24}
+\contentsline {section}{\numberline {5}Conclusions}{26}
+\contentsline {section}{\numberline {6}Further implementations}{27}
+\contentsline {subsection}{\numberline {6.1}Other parameters}{27}
+\contentsline {subsection}{\numberline {6.2}Other strategies}{28}
+\contentsline {subsection}{\numberline {6.3}Other fields of implementation}{28}

@@ -76,21 +76,17 @@ bool Particle::Propagate(double h, double dh){
 		return true;
 	if(ptype == PGAMMA)
 		return false;
-	 if(!lcm_computed){
-		 old_position = position;
-		 position += direction.GetNormalized() * 0.71*TMath::Power(energy, 1.72);
-		 //delta_pos += position - old_position;
-		 lcm_computed = true;
-	 }
-	 if(position.GetZ() > h + dh)
-		 return false;
-	 return true;
-}
-
-//---------------------------------------------------------------------------//
-
-double Particle::LCM(double h, double z_top) {
-	return 0.71*TMath::Power(energy, 1.72);
+	if(!lcm_computed){
+		old_position = position;
+		if(energy <= g_absorb_threshold)
+			position += direction.GetNormalized() * 0.71*TMath::Power(energy, 1.72);
+		else
+			position += direction.GetNormalized() * (0.53*energy - 0.106);
+		lcm_computed = true;
+	}
+	if(position.GetZ() > h + dh)
+		return false;
+	return true;
 }
 
 //---------------------------------------------------------------------------//
@@ -126,15 +122,6 @@ bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter
 //---------------------------------------------------------------------------//
 
 double Particle::BSEnergy() {
-	/*double *args_f = new double[1];
-	args_f[0] = this->energy;
-
-	double *args_f_inv = new double[2];
-	args_f_inv[0] = g_gamma_bs_min_energy;
-	args_f_inv[1] = this->energy;
-	//energy_extractor.SetFArgs(args_f,args_f,args_f_inv);
-	//InportanceRandom energy_extractor = InportanceRandom(BSCrossSection, args_f, BSCrossSectionMajor, args_f, BSCrossSectionMajorInverse, args_f_inv);
-*/
 	double energy_gamma = 0.1*this->energy;
 
 	double k,y;
@@ -145,12 +132,6 @@ double Particle::BSEnergy() {
 		} while (energy_gamma >= energy);
 		y = gRandom->Rndm()*BSCrossSectionMajor(energy_gamma, this->energy);
 	} while(y >= BSCrossSection(energy_gamma, this->energy));
-	/*do {
-		 energy_gamma = energy_extractor.Rndm();
-	} while (energy_gamma >= this->energy);
-	delete[] args_f;
-	delete[] args_f_inv;
-	return energy_gamma;*/
 
 	this->energy -= energy_gamma;
 	return energy_gamma;
@@ -165,21 +146,16 @@ bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2,
 			double lambda = (7./9.)*X0(this->ptype);
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
-		} //else
-			//old_position = position;
-
+		}
 		if(position.GetZ() >= h + dh)
 			return false;
 
 		double phi = gRandom->Rndm()*2.*TMath::Pi();
 		double theta = g_masses[(int)PELECTRON]/energy;
 		double r = h * TMath::Tan(theta);
-		//new Particle(PPOSITRON, 0.5*energy, Vector3D(r, TMath::Pi()+phi, h) + direction.GetNormalized(), GetPositon(), false);
 		p1 = Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 		p2 = Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 		counter += 2;
-		//if(!p1) printf("Error\n");
-		//if(!p2) printf("Error\n");
 		return true;
 	}
 	return false;

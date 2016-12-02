@@ -1,0 +1,22 @@
+\begin{thebibliography}{2}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Arthur(1994)]{arthur1994}
+W~Brian Arthur.
+\newblock Inductive reasoning and bounded rationality.
+\newblock \emph{The American economic review}, 84\penalty0 (2):\penalty0
+  406--411, 1994.
+
+\bibitem[{Chakrabarti} et~al.(2009){Chakrabarti}, {Chakrabarti}, {Chatterjee},
+  and {Mitra}]{Chakrabarti2009}
+A.~S. {Chakrabarti}, B.~K. {Chakrabarti}, A.~{Chatterjee}, and M.~{Mitra}.
+\newblock {The Kolkata Paise Restaurant problem and resource utilization}.
+\newblock \emph{Physica A Statistical Mechanics and its Applications},
+  388:\penalty0 2420--2426, June 2009.
+\newblock \doi{10.1016/j.physa.2009.02.039}.
+
+\end{thebibliography}

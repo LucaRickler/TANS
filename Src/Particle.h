@@ -78,7 +78,6 @@ class Particle : public TObject{
 		bool lcm_computed;
 		Vector3D direction;
 
-		double LCM(double, double);
 		double BSEnergy();
 		bool BSEmission(double h, double dh, Particle& out_gamma, int& counter, double& energy_lost);
 		bool CoupleGeneration(double h, double dh, Particle& p1, Particle& p2, int& counter);
