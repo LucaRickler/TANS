@@ -20,26 +20,24 @@ enum PType {
 //---------------------------------------------------------------------------//
 //NOTA: possibile miglioria: calcolo di Z(h) da aggiungere alle sezioni d'urto
 
-double BSCrossSection(double* x, double* par) {
+double BSCrossSection(double k, double E) {
 	//Sezione d'urto per brehmsstrahlung
-	double xx = x[0];
 	//return 4./3./xx - 4./3./par[0] + xx/par[0]/par[0];
 	//return x[0] + (1. - x[0])*(4./3. + 2.*bs_b)/x[0];
-	return par[0]/xx + 0.75*xx/par[0] - 1.;
+	return E/k + 0.75*k/E - 1.;
 }
 
-double BSCrossSectionMajor(double* x, double* par) {
+double BSCrossSectionMajor(double k, double E) {
 	//Maggiorante della sezione d'urto per brehmsstrahlung
-	double xx = x[0];
+	//double xx = x[0];
 	//return 4./3./xx;
-	return par[0]/xx;
+	return E/k;
 }
 
-double BSCrossSectionMajorInverse(double* x, double* par) {
+double BSCrossSectionMajorInverse(double u, double kmin, double kmax) {
 	//Inverso dell'integrale del maggiorante della sezione d'urto per brehmsstrahlung
-	double xx = x[0];
 	//return TMath::Exp(xx*TMath::Log(par[1]) - (xx + 1)*TMath::Log(par[0]));
-	return TMath::Exp(xx*(TMath::Log(par[1]) - TMath::Log(par[0])));
+	return TMath::Exp(u*(TMath::Log(kmax) - TMath::Log(kmin)));
 }
 
 double NGamma(double E, double Kmin, double Kmax) {
@@ -61,7 +59,7 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
-		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter); // Splitting della particella
+		bool Divide(double h, double dh, vector<Particle>& p1, Particle& p2, int& counter, double& energy_lost); // Splitting della particella
 		bool Propagate(double h, double dh); // Trasporto della particella
 		double GetEnergy() const {return energy;}
 		PType GetPType() const {return ptype;}
@@ -80,10 +78,8 @@ class Particle : public TObject{
 		bool lcm_computed;
 		Vector3D direction;
 
-		double LCM(double, double);
-		double BSLCM();
 		double BSEnergy();
-		bool BSEmission(double h, double dh, Particle& out_gamma, int& counter);
+		bool BSEmission(double h, double dh, Particle& out_gamma, int& counter, double& energy_lost);
 		bool CoupleGeneration(double h, double dh, Particle& p1, Particle& p2, int& counter);
 
 		ClassDef(Particle, 1)
