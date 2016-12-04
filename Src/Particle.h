@@ -85,7 +85,4 @@ class Particle : public TObject{
 		ClassDef(Particle, 1)
 };
 
-const Particle null_particle();
-
-
 #endif /* PARTICLE_H_ */
