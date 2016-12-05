@@ -43,19 +43,20 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 					return true;
 				}
 			} else {
-				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
+				Particle bs_gamma, positron; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
 				while(BSEmission(h,dh,bs_gamma,counter,energy_lost)) {
 					if(bs_gamma.GetEnergy() != 0.) {
-						if(!bs_gamma.Divide(h,dh,p1,p2,counter,energy_lost)) {
+						if(!bs_gamma.Divide(h,dh,p1,positron,counter,energy_lost)) {
 							p1.push_back(bs_gamma); //Caso senza produzione di coppia
 						} else {
-							p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
+							p1.push_back(positron); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
 							//--counter;
 						}
 					}
 					return_state = true;
 				}
+				p2 = Particle();
 				return return_state;
 			}
 		}
@@ -78,7 +79,7 @@ bool Particle::Propagate(double h, double dh){
 			position += direction.GetNormalized() * (0.53*energy - 0.106);
 		lcm_computed = true;
 	}
-	if(position.GetZ() > h + dh)
+	if(position.GetZ() < h + dh)
 		return false;
 	return true;
 }
