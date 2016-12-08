@@ -5,7 +5,6 @@
 #include "Constants.h"
 #include <TRandom3.h>
 #include <TVector.h>
-#include "InportanceRandom.h"
 #include <TMath.h>
 
 enum PType {
@@ -84,8 +83,5 @@ class Particle : public TObject{
 
 		ClassDef(Particle, 1)
 };
-
-const Particle null_particle();
-
 
 #endif /* PARTICLE_H_ */

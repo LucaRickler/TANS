@@ -4,31 +4,29 @@ ClassImp(Particle)
 //---------------------------------------------------------------------------//
 
 Particle::Particle() : TObject() {
-		this->ptype = PGAMMA;
-	  this->energy = 0.0;
-	  this->direction = Vector3D();
-		this->position = Vector3D();
-		this->old_position = Vector3D();
-		this->is_primary = false;
-		this->lcm_computed = false;
-		this->delta_pos = Vector3D();
-		//this->energy_extractor = InportanceRandom(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
+	this->ptype = PGAMMA;
+  this->energy = 0.0;
+  this->direction = Vector3D();
+	this->position = Vector3D();
+	this->old_position = Vector3D();
+	this->is_primary = false;
+	this->lcm_computed = false;
+	this->delta_pos = Vector3D();
 }
 
 //---------------------------------------------------------------------------//
 
 Particle::Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary){
-		if(ptype == NUMBER_OF_PARTICLES)
-			ptype = PGAMMA;
-		this->ptype = ptype;
-	  this->energy = (energy >= 0.0 ? energy : 0.0);
-		this->direction = direction;
-		this->position = position;
-		this->old_position = position;
-		this->is_primary = primary;
-		this->lcm_computed = false;
-		this->delta_pos = Vector3D();
-		//this->energy_extractor = InportanceRandom(BSCrossSection, NULL, BSCrossSectionMajor, NULL, BSCrossSectionMajorInverse, NULL);
+	if(ptype == NUMBER_OF_PARTICLES)
+		ptype = PGAMMA;
+	this->ptype = ptype;
+  this->energy = (energy >= 0.0 ? energy : 0.0);
+	this->direction = direction;
+	this->position = position;
+	this->old_position = position;
+	this->is_primary = primary;
+	this->lcm_computed = false;
+	this->delta_pos = Vector3D();
 }
 
 //---------------------------------------------------------------------------//
@@ -45,25 +43,22 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 					return true;
 				}
 			} else {
-				Particle bs_gamma; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
+				Particle bs_gamma, positron; //Questo gamma potrebbe fare coppia in [h,h+dh], dobbiamo considerarlo
 				bool return_state = false;
 				while(BSEmission(h,dh,bs_gamma,counter,energy_lost)) {
 					if(bs_gamma.GetEnergy() != 0.) {
-						if(!bs_gamma.Divide(h,dh,p1,p2,counter,energy_lost)) {
+						if(!bs_gamma.Divide(h,dh,p1,positron,counter,energy_lost)) {
 							p1.push_back(bs_gamma); //Caso senza produzione di coppia
 						} else {
-							p1.push_back(p2); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
+							p1.push_back(positron); //Caso con produzione di coppia. Il primo e- viene già inserito dentro p1 da Divide()
 							//--counter;
 						}
 					}
 					return_state = true;
 				}
-				//p2 = NULL;
-
+				p2 = Particle();
 				return return_state;
 			}
-
-			//return true;
 		}
 
  		return false;
@@ -84,7 +79,7 @@ bool Particle::Propagate(double h, double dh){
 			position += direction.GetNormalized() * (0.53*energy - 0.106);
 		lcm_computed = true;
 	}
-	if(position.GetZ() > h + dh)
+	if(position.GetZ() < h + dh)
 		return false;
 	return true;
 }
@@ -122,9 +117,7 @@ bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter
 //---------------------------------------------------------------------------//
 
 double Particle::BSEnergy() {
-	double energy_gamma = 0.1*this->energy;
-
-	double k,y;
+	double y, energy_gamma = 0.1*this->energy;
 
 	do {
 		do {
