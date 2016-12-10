@@ -34,7 +34,7 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
   double dh = 0.1;
 
   int max_k = 0;
-  int max = 0.;
+  unsigned int max = 0.;
   int id = 0, id2 = 1, size, old_size;
 
   TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", bin_number, 0,bin_number*dh);
@@ -44,19 +44,21 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
   //size = old_size = all_particles[0].AddAtFree(new Particle(PGAMMA, init_energy, Vector3D(0.,0.,1.), Vector3D(0.,0.,h), true));
 
   for(int k = 1; k <= bin_number; k++) {
-    cout << "Ciclo #" << k << endl;
+    if (print)
+      cout << "Ciclo #" << k << endl;
     counter = 0;
     energy_lost_here = 0.0;
     id2 = (id+1)%2;
     //old_size = size + 1;
     //size = 0;
-    for(int i = 0; i < all_particles[id].size(); i++) {//old_size; i++) {//
+    for(unsigned int i = 0; i < all_particles[id].size(); i++) {//old_size; i++) {//
       vector<Particle> p1;
       Particle p2, p = all_particles[id][i];//*p = (Particle*)all_particles[id][i];
       if(p.Divide(h, dh, p1, p2, counter,energy_lost_here)){ // ->
-        for(int j = 0; j < p1.size(); j++)
+        for(unsigned int j = 0; j < p1.size(); j++) {
           //size = all_particles[id2].AddAtFree(new Particle(p1[j]));
           all_particles[id2].push_back(p1[j]);
+        }
         if(p2.GetEnergy() != 0.) { ///Valido per coppie (p2 è il positrone)
           //size = all_particles[id2].AddAtFree(new Particle(p2));
           all_particles[id2].push_back(p2);
@@ -64,14 +66,15 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
           //size = all_particles[id2].AddAtFree(p);
           //all_particles[id2].push_back(p);
         }
-        if(p.GetPType() != PGAMMA)
+        if(p.GetPType() != PGAMMA) {
           //size = all_particles[id2].AddAtFree(p);
           all_particles[id2].push_back(p);
+        }
       } else {
-        if(p.Propagate(h, dh)) // ->
+        if(p.Propagate(h, dh)) { // ->
           //size = all_particles[id2].AddAtFree(p);
           all_particles[id2].push_back(p); ///Valido se la particella non interagisce qui, ma dopo
-        else ///Valido se la particella è assorbita
+        } else ///Valido se la particella è assorbita
           energy_lost_here += p.GetEnergy(); // ->
           //delete p;
       }
@@ -103,6 +106,9 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
     new TCanvas();
     //energy_loss->Scale(1./energy_loss->Integral(), "width");
     energy_loss->DrawCopy("histo");
+  } else {
+    delete energy_loss;
+    delete particle_count;
   }
   delete[] all_particles;
 }
@@ -110,14 +116,28 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
 void ElongationFit(double Emin, double Emax, double increment, int seed = 42) {
   TRandom2 rnd(42);
 
-  TH1D *data = new TH1D("Elongation Rate", "Elongation Rate", 1000, TMath::Log10(Emin), TMath::Log10(Emax));
+  const int samples = 10;
 
-  double max_elongation;
+  TH1D *data = new TH1D("Elongation Rate", "Elongation Rate", 10000, TMath::Log10(Emin), TMath::Log10(Emax));
+
   double energy = Emin;
-
+  int bin = 1;
   while(energy < Emax) {
-    EMShower(energy, max_elongation, rnd.Rndm(), false);
-    data->SetBinContent(TMath::Log10(energy),max_elongation);
+    double mean = 0, stdev = 0, raws[samples];
+
+    cout << "E: " << energy << endl;
+    bin = data->GetXaxis()->FindBin(TMath::Log10(energy));
+    for(int i = 0; i < samples; i++) {
+      EMShower(energy, raws[i], rnd.Rndm(), false);
+      mean += raws[i]/samples;
+    }
+
+    for(int i = 0; i < samples; i++) {
+      stdev = (mean - raws[i])*(mean - raws[i])/(samples - 1);
+    }
+
+    data->SetBinContent(bin,mean);
+    data->SetBinError(bin,stdev);
     energy *= increment;
   }
 

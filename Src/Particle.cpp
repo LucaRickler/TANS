@@ -69,14 +69,14 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 bool Particle::Propagate(double h, double dh){
 	if(energy > g_threshold[(int)ptype])
 		return true;
-	if(ptype == PGAMMA)
+	else if(ptype == PGAMMA)
 		return false;
 	if(!lcm_computed){
 		old_position = position;
 		if(energy <= g_absorb_threshold)
-			position += direction.GetNormalized() * 0.71*TMath::Power(energy, 1.72);
+			position += direction.GetNormalized() * gRandom->Exp(0.71*TMath::Power(energy, 1.72));
 		else
-			position += direction.GetNormalized() * (0.53*energy - 0.106);
+			position += direction.GetNormalized() * gRandom->Exp((0.53*energy - 0.106));
 		lcm_computed = true;
 	}
 	if(position.GetZ() < h + dh)
@@ -89,7 +89,7 @@ bool Particle::Propagate(double h, double dh){
 bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter, double& energy_lost) {
 	if(energy > g_threshold[(int)ptype]) {
 		if(old_position.GetZ() >= h && position.GetZ() < h + dh) {
-			double lambda = X0(this->ptype)/NGamma(this->energy, g_gamma_bs_min_energy, this->energy);
+			double lambda = gRandom->Exp(X0(this->ptype)/NGamma(this->energy, g_gamma_bs_min_energy, this->energy));
 			old_position = position;
 			position += direction.GetNormalized() * lambda;
 		} else
