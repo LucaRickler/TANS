@@ -21,26 +21,21 @@ enum PType {
 
 double BSCrossSection(double k, double E) {
 	//Sezione d'urto per brehmsstrahlung
-	//return 4./3./xx - 4./3./par[0] + xx/par[0]/par[0];
-	//return x[0] + (1. - x[0])*(4./3. + 2.*bs_b)/x[0];
 	return E/k + 0.75*k/E - 1.;
 }
 
 double BSCrossSectionMajor(double k, double E) {
 	//Maggiorante della sezione d'urto per brehmsstrahlung
-	//double xx = x[0];
-	//return 4./3./xx;
 	return E/k;
 }
 
 double BSCrossSectionMajorInverse(double u, double kmin, double kmax) {
 	//Inverso dell'integrale del maggiorante della sezione d'urto per brehmsstrahlung
-	//return TMath::Exp(xx*TMath::Log(par[1]) - (xx + 1)*TMath::Log(par[0]));
 	return TMath::Exp(u*(TMath::Log(kmax) - TMath::Log(kmin)));
 }
 
 double NGamma(double E, double Kmin, double Kmax) {
-	//Numero di gamma emessi per BS tra Kmin (par[0]) e Kmax (par[1]) in una lunghezza di radiazione da un elettrone di energia E (x[0])
+	//Numero di gamma emessi per BS tra Kmin e Kmax in una lunghezza di radiazione da un elettrone di energia E
 	return (4./3. * TMath::Log(Kmax/Kmin - 4.*(Kmax - Kmin)/3./E + 0.5*(Kmax*Kmax - Kmin*Kmin)/E/E));
 }
 

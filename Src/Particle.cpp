@@ -69,7 +69,7 @@ bool Particle::Divide(double h, double dh, vector<Particle>& p1, Particle& p2, i
 bool Particle::Propagate(double h, double dh){
 	if(energy > g_threshold[(int)ptype])
 		return true;
-	else if(ptype == PGAMMA)
+	if(ptype == PGAMMA)
 		return false;
 	if(!lcm_computed){
 		old_position = position;
