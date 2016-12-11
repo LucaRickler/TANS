@@ -22,11 +22,6 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
   all_particles[0] = vector<Particle>();
   all_particles[1] = vector<Particle>();
 
-  //TClonesArray all_particles[2] = {TClonesArray("Particle", max_particles),TClonesArray("Particle", max_particles)};
-  /*TClonesArray *all_particles = new TClonesArray[2];
-  all_particles[0] = TClonesArray("Particle", max_particles);
-  all_particles[1] = TClonesArray("Particle", max_particles);*/
-
   int bin_number = 500;
 
   int counter = 0;
@@ -35,13 +30,12 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
 
   int max_k = 0;
   unsigned int max = 0.;
-  int id = 0, id2 = 1, size, old_size;
+  int id = 0, id2 = 1;
 
   TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", bin_number, 0,bin_number*dh);
   TH1D* energy_loss = new TH1D("Energia rilasicata per strato atmosferico", "Energia rilasicata per strato atmosferico", bin_number, 0,bin_number*dh);
   double energy_lost_here = 0.0;
   all_particles[0].push_back(Particle(PGAMMA, init_energy, Vector3D(0.,0.,1.), Vector3D(0.,0.,h), true));
-  //size = old_size = all_particles[0].AddAtFree(new Particle(PGAMMA, init_energy, Vector3D(0.,0.,1.), Vector3D(0.,0.,h), true));
 
   for(int k = 1; k <= bin_number; k++) {
     if (print)
@@ -49,49 +43,33 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
     counter = 0;
     energy_lost_here = 0.0;
     id2 = (id+1)%2;
-    //old_size = size + 1;
-    //size = 0;
-    for(unsigned int i = 0; i < all_particles[id].size(); i++) {//old_size; i++) {//
+    for(unsigned int i = 0; i < all_particles[id].size(); i++) {
       vector<Particle> p1;
-      Particle p2, p = all_particles[id][i];//*p = (Particle*)all_particles[id][i];
-      if(p.Divide(h, dh, p1, p2, counter,energy_lost_here)){ // ->
+      Particle p2, p = all_particles[id][i];
+      if(p.Divide(h, dh, p1, p2, counter,energy_lost_here)){
         for(unsigned int j = 0; j < p1.size(); j++) {
-          //size = all_particles[id2].AddAtFree(new Particle(p1[j]));
           all_particles[id2].push_back(p1[j]);
         }
-        if(p2.GetEnergy() != 0.) { ///Valido per coppie (p2 è il positrone)
-          //size = all_particles[id2].AddAtFree(new Particle(p2));
+        if(p2.GetEnergy() != 0.) ///Valido per coppie (p2 è il positrone)
           all_particles[id2].push_back(p2);
-        } else { ///Valido per BS (elettrone superstite)
-          //size = all_particles[id2].AddAtFree(p);
-          //all_particles[id2].push_back(p);
-        }
         if(p.GetPType() != PGAMMA) {
-          //size = all_particles[id2].AddAtFree(p);
           all_particles[id2].push_back(p);
         }
       } else {
         if(p.Propagate(h, dh)) { // ->
-          //size = all_particles[id2].AddAtFree(p);
           all_particles[id2].push_back(p); ///Valido se la particella non interagisce qui, ma dopo
         } else ///Valido se la particella è assorbita
           energy_lost_here += p.GetEnergy(); // ->
-          //delete p;
       }
     }
     //Raccolgo i dati
-    //particle_count->SetBinContent(k,old_size);
-    //if(size > max)
-      //max = size;
     particle_count->SetBinContent(k,all_particles[id].size());
     if(all_particles[id].size() > max){
       max = all_particles[id].size();
       max_k = k;
     }
     energy_loss->SetBinContent(k,energy_lost_here/init_energy);
-    //all_particles[id].Clear();
     all_particles[id].clear();
-    //all_particles[id].reserve(max_particles);
     id = id2;
     h = h + dh;
   }
