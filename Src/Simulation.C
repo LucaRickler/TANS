@@ -3,14 +3,12 @@
 #include <TCanvas.h>
 #include <TFile.h>
 #include <TH1D.h>
-#include <TH2D.h>
 #include <TF1.h>
 #include <TRandom3.h>
 #include <TRandom2.h>
 #include <TStyle.h>
 #include <TString.h>
 #include <TVector.h>
-#include <TClonesArray.h>
 #include "Particle.h"
 #endif
 
@@ -45,13 +43,11 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
     id2 = (id+1)%2;
     for(unsigned int i = 0; i < all_particles[id].size(); i++) {
       vector<Particle> p1;
-      Particle p2, p = all_particles[id][i];
-      if(p.Divide(h, dh, p1, p2, counter,energy_lost_here)){
+      Particle p = all_particles[id][i];
+      if(p.Divide(h, dh, p1,counter,energy_lost_here)){
         for(unsigned int j = 0; j < p1.size(); j++) {
           all_particles[id2].push_back(p1[j]);
         }
-        if(p2.GetEnergy() != 0.) ///Valido per coppie (p2 è il positrone)
-          all_particles[id2].push_back(p2);
         if(p.GetPType() != PGAMMA) {
           all_particles[id2].push_back(p);
         }

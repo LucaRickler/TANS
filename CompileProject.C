@@ -1,6 +1,4 @@
 #if !defined(__CINT__) || defined(__MAKECINT__)
-#include <TH1D.h>
-#include <TF1.h>
 #include <TROOT.h>
 #endif
 

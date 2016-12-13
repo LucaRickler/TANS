@@ -9,9 +9,6 @@ const double g_threshold_gamma = 10.; // Soglia in MeV per i gamma per fare prod
 const double g_threshold_electron = 88.05; // Soglia in MeV per gli elettroni per fare bremmstrahlung.
 const double g_threshold_positron = g_threshold_electron; // Soglia in MeV per gli positroni per fare bremmstrahlung.
 
-const double g_c = 299792458.0; // m/s
-const double g_c2 = 8.98755178736817600e+16; // m/s
-
 const double Na = 6.022e+23;
 
 const double Z_mean = 14.46;
