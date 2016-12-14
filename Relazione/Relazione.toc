@@ -4,8 +4,8 @@
 \contentsline {subsection}{\numberline {1.1}Sciami elettromagnetici}{3}
 \contentsline {subsection}{\numberline {1.2}Sviluppo dello sciame}{4}
 \contentsline {subsection}{\numberline {1.3}Riassorbimento dello sciame}{5}
-\contentsline {section}{\numberline {2}Descrizione codice}{5}
-\contentsline {section}{\numberline {3}Compilazione codice}{6}
+\contentsline {section}{\numberline {2}Descrizione del codice}{6}
+\contentsline {section}{\numberline {3}Compilazione ed esecuzione}{7}
 \contentsline {section}{\numberline {4}Risultati e confronti con altri modelli}{7}
 \contentsline {section}{\numberline {A}Appendici}{8}
 \contentsline {subsection}{\numberline {A.1}Calcolo dell'energia critica e della lunghezza di radiazione per elettroni e positroni in atmosfera}{8}

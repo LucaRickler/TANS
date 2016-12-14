@@ -34,11 +34,10 @@ Particle::Particle(PType ptype, double energy, const Vector3D& direction, const 
 bool Particle::Divide(double h, double dh, vector<Particle>& p1, int& counter, double& energy_lost) {
 	if(energy > g_threshold[(int)ptype]) {
 		if(ptype == PGAMMA){
-			Particle electron, bs_gamma, positron;
-			Particle dummy;
+			Particle electron, positron;
 			if(CoupleGeneration(h,dh,electron,positron,counter)) {
-				p1.push_back(electron);
 				electron.Divide(h,dh,p1,counter,energy_lost); //potrebbe fare BS in [h,h+dh]
+				p1.push_back(electron);
 				positron.Divide(h,dh,p1,counter,energy_lost);
 				p1.push_back(positron);
 				return true;
@@ -103,9 +102,10 @@ bool Particle::BSEmission(double h, double dh, Particle& out_gamma, int &counter
 		++counter;
 		if(gamma_energy >= g_threshold_gamma){
 			out_gamma =  Particle(PGAMMA, gamma_energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
-		} else
+		} else {
 			out_gamma = Particle();
 			energy_lost += gamma_energy;
+		}
 		return true;
 	}
 	return false;
@@ -144,7 +144,7 @@ bool Particle::CoupleGeneration(double h, double dh, Particle& p1, Particle& p2,
 		double theta = g_masses[(int)PELECTRON]/energy;
 		double r = h * TMath::Tan(theta);
 		p1 = Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
-		p2 = Particle(PELECTRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
+		p2 = Particle(PPOSITRON, 0.5*energy, Vector3D(r, phi, h) + direction.GetNormalized(), GetPositon(), false);
 		counter += 2;
 		return true;
 	}

@@ -37,8 +37,8 @@
 \pagebreak
 
 \begin{abstract}
-Scopo del seguente programma è la simulazione, con il metodo Monte Carlo, dello sviluppo di uno sciame elettromagnetico in atmosfera. 
-\\Tale sciame si può immaginare come prodotto dall'interazione di un raggio cosmico primario con gli elementi componenti l'atmosfera terrestre. Si dà la possibilità all'utente di scegliere l'energia della particella (un raggio gamma) che darà inizio allo sciame scegliendo in un intervallo di energie tra i $10^2\unit{MeV}$ ed i $10^5\unit{MeV}$. 
+Scopo del seguente programma è la simulazione, con metodi Monte Carlo, dello sviluppo di uno sciame elettromagnetico in atmosfera. 
+\\Tale sciame si può immaginare come prodotto dall'interazione di un raggio cosmico primario con gli elementi componenti l'atmosfera terrestre. Si dà la possibilità all'utente di scegliere l'energia della particella (un raggio gamma) che darà inizio allo sciame in un intervallo di energie tra i $10^2\unit{MeV}$ ed i $10^5\unit{MeV}$. 
 \\I risultati di tale simulazione possono essere confrontati con quelli di altre simulazioni presenti allo stato dell'arte. 
 \end{abstract}
 
@@ -49,81 +49,114 @@ Scopo del seguente programma è la simulazione, con il metodo Monte Carlo, dello
 Un raggio cosmico primario può generare una cascata di particelle secondarie. Questo sciame di particelle viene comunemente chiamato \textit{Extensive Air Showers} (EAS). In particolare questi sciami sono composti sia da una componente elettromagnetica che da una adronica. Nella presente simulazione, si focalizzerà l'attenzione sulla sola componente elettromagnetica generata da un raggio gamma considerato come particella primaria (sciami generati da elettroni o positroni sono, dopo poche lunghezze di radiazione, del tutto analoghi a quelli generati da raggi gamma). 
 
 \subsection{Sciami elettromagnetici}
-Come detto, si può considerare uno sciame elettromagnetico come prodotto dall'interazione di un elettrone, positrone o raggio gamma con l'atmosfera terrestre. Date le alte energie in gioco ($\approx10^5\unit{MeV}$), i fenomeni di interazione predominanti per queste particelle a tali energie sono:
+Come detto, si può considerare uno sciame elettromagnetico come prodotto dall'interazione di un elettrone, positrone o raggio gamma con l'atmosfera terrestre. Date le alte energie in gioco ($\approx10^4\unit{MeV}$), i fenomeni di interazione predominanti per queste particelle a tali energie sono:
 \begin{itemize}
 \item \textbf{bremsstrahlung} per gli elettroni ed i positroni;
 \item \textbf{produzione di coppia} per i raggi gamma.
 \end{itemize}
-Si supponga, a titolo di esempio, un elettrone come particella primaria. Si avrà la creazione di fotoni (per via della radiazione di bremsstrahlung) che possono a loro volta creare elettroni e positroni tramite la produzione di coppia. Questi a loro volta possono fare bremsstrahlung e così via. Il processo continua fino al raggiungimento delle energie critiche. Queste sono $88.05\unit{MeV}$ per la bremsstrahlung e $10\unit{MeV}$ per la produzione di coppia. 
-\\L'energia critica per la bremsstrhalung in atmosfera (considerata composta da azoto molecolare, ossigeno molecolare ed argon) si è ricavata facendo prima una media tra l'energia critica di elettroni e positroni nei singoli elementi che la costituiscono e, successivamente, con le medie ottenute, una media ponderata per considerare l'abbondanza dei suddetti elementi in atmosfera ($78\% N_2$, $21\% O_2$ ed $1\% Ar$). Si veda l'Appendice A per i risultati ottenuti. Le varie energie critiche di elettroni e positroni nei singoli elementi sono state prese da \cite{Olive:2016xmw}. Per quanto riguarda l'energia di soglia per la produzione di coppie, si è scelto il valore di energia per il quale questo tipo di interazione predominasse sugli altri. A tal fine si è ritenuto, come si può osservare nel grafico in \figurename~\ref{\fpath jpg:AttenuazioneFotoni}, che $100\unit{MeV}$ fosse una buona scelta. 
-\begin{figure} [h!]
+Si supponga, a titolo di esempio, un elettrone come particella primaria. Questo emetterà fotoni (per via della radiazione di bremsstrahlung) che potranno a loro volta creare elettroni e positroni tramite la produzione di coppia. Questi leptoni potranno quindi emettere fotoni per bremsstrahlung e così via. Il processo continua fino al raggiungimento delle energie critiche. Queste sono $88.05\unit{MeV}$ per la bremsstrahlung e $10\unit{MeV}$ per la produzione di coppia. 
+
+L'energia critica per la bremsstrhalung in atmosfera (considerata composta da azoto molecolare, ossigeno molecolare ed argon) si è ricavata effettuando prima una media tra l'energia critica per gli elettroni e per i positroni relativa ad ogni singola specie atomica e, successivamente, una media dei risultati pesata sull'abbondanza dei suddetti elementi in atmosfera ($78\% N_2$, $21\% O_2$ ed $1\% Ar$). Si veda l'appendice \ref{appendix:a} per i calcoli estesi. I dati delle energie critiche sono stati presi da \cite{Olive:2016xmw}. 
+
+Per quanto riguarda l'energia di soglia per la produzione di coppie, si è scelto il valore per il quale questo tipo di processo predomina sugli altri. A tal fine, si è ritenuto, come si può osservare nel grafico in \figurename~\ref{\fpath jpg:AttenuazioneFotoni}, che $10\unit{MeV}$ fosse una buona scelta. 
+\begin{figure} [!htb]
 \centering
 \includegraphics[width=11cm, height=11cm, keepaspectratio]{\fpath AttenuazioneFotoni}
 \caption{Diversi meccanismi di attenuazione di fotoni in un mezzo in funzione dell'energia. }
 \label{\fpath jpg:AttenuazioneFotoni}
 \end{figure}
-\\Si sono dunque considerate, fino al raggiungimento delle rispettive energie critiche, esclusivamente i processi di bremsstrahlung e di produzione di coppie (che portano allo sviluppo dello sciame). Successivamente, le singole particelle arrivano ad avere energie sotto soglia e, non venendosi a creare nuove particelle, comincia il riassorbimento dello sciame. 
-\\Viene spiegata di seguito, più in dettaglio, la logica utilizzata per la simulazione Monte Carlo dello sviluppo ed il riassorbimento dello sciame. 
+
+Sono dunque stati considerati, fino al raggiungimento delle rispettive energie critiche, esclusivamente i processi sopra citati per lo sviluppo dello sciame. Nel caso di una particella con energia non sufficiente, è stato considerato un processo di riassorbimento spiegato in seguito nel paragrafo \ref{subsec:riassorb}. 
 
 \subsection{Sviluppo dello sciame}
-Si consideri l'atmosfera come divisa in strati atmosferici di spessore pari ad una lunghezza di radiazione $\tilde{x}_0 \unit{[g/cm^2]}$. Nel primo strato atmosferico sarà presente il raggio cosmico primario che, se ad energia sufficiente (i.e. $> E_{soglia}$), interagirà facendo produzione di coppia o bremsstrahlung. Si studiano poi separatamente il comportamento di elettroni/positroni e di raggi gamma. 
-\\Cominciando dal fenomeno di bremsstrahlung, da letteratura \citep{PassParticMatterPDG}, si trova che il numero di fotoni prodotti come radiazione di bremsstrahlung in funzione dello spazio percorso e dell'energia dei gamma emessi (compresa tra $k_{min}$ e $k_{max}$) risulta essere pari a: 
+L'atmosfera è stata suddivisa in strati verticali di spessore pari ad una lunghezza di radiazione $\tilde{x}_0 \unit{[g/cm^2]}$. Nel primo strato viene iniettato il raggio cosmico primario che, se sufficientemente energetico (i.e. $E > E_{soglia}$), interagirà attraverso la produzione di coppia o la radiazione di bremsstrahlung. Il processo è simulato ad intervalli costanti $dh$ (step) pari a $0.1\unit{\tilde{x}_0}$.
+
+Il comportamento dei leptoni e dei raggi gamma è simulato in modi diversi per ogni specie.
+ 
+Cominciando dalla radiazione bremsstrahlung, dalla letteratura \citep{PassParticMatterPDG}, si trova che il numero di fotoni prodotti da un elettrone di energia $E_e$ in funzione dello spazio percorso e della loro energia, compresa tra $k_{min}$ e $k_{max}$, risulta essere pari a: 
 \begin{equation}
-N_\gamma = \frac{d}{\tilde{x}_0}\left[\frac{4}{3}\ln{\frac{k_{max}}{k_{min}}}-\frac{4(k_{max} - k_{min})}{3E_e}+\frac{k_{max}^2 - k_{min}^2}{2E_e^2}\right]
+N_\gamma = \frac{d}{\tilde{x}_0}\left[\frac{4}{3}\ln{\frac{k_{max}}{k_{min}}}-\frac{4(k_{max} - k_{min})}{3E_e}+\frac{k_{max}^2 - k_{min}^2}{2E_e^2}\right],
 \label{eq:Ngamma}
 \end{equation}
-che vale per distanze percorse $d \ll \tilde{x}_0 \unit{[g/cm^2]}$. L'elettrone perde, per ogni gamma prodotto, la rispettiva energia. Questi gamma emessi, possono o non possono fare produzione di coppia in funzione alla loro energia (che viene divisa esattamente a metà tra l'elettrone ed il positrone creati). 
-\\Ogni particella creata (sia gamma di bremsstrahlung che elettroni/positroni di produzione di coppia) è stata considerata emessa ad un certo angolo zenitale $\theta$ e ad uno azimutale $\phi$ (estratto casualmente tra 0 e $2\pi$). L'angolo $\theta$ considerato ha un valore medio fisso di: 
+valida per distanze percorse $d \ll \tilde{x}_0 \unit{[g/cm^2]}$. Si è quindi ricavato il libero cammino medio degli elettroni come la distanza alla quale il numero di gamma emessi è pari ad uno:
+\begin{equation}
+\lambda_{BS} = d = \left({\frac{\tilde{x}_0}{N_\gamma}}\right)_{N_\gamma \rightarrow 1}.
+\label{eq:lambdaBS}
+\end{equation}
+
+Sono stati considerati come valori di $k_{min}$ e $k_{max}$ rispettivamente $1\unit{keV}$ e l'energia del leptone. Il valore minimo è stato scelto arbitrariamente decidendo di ignorare i raggi gamma di energia inferiore al keV.
+
+La distanza percorsa da ogni singola particella è stata estratta da una distribuzione esponenziale considerando questo libero cammino medio quale parametro. L'energia emessa in forma di fotone è stata estratta tra $1 \unit{keV}$ e l'energia $E$ dell'elettrone per inportance sampling dalla sezione d'urto in funzione dell'energia $k$ del fotone emesso:
+\begin{equation}
+\frac{d\sigma}{dk} \simeq \frac{E}{k} + \frac 3 4 \frac{k}{E} - 1.
+\label{eq:dSigma}
+\end{equation}
+
+Nel caso in cui l'energia emessa sia inferiore alla soglia della produzione di coppie, non viene istanziata una nuova particella, ma l'energia emessa viene contata come persa in quello step.
+
+\bigskip
+
+I gamma emessi possono generare elettroni e positroni per produzione di coppia se sufficientemente energetici. La distanza di interazione è stata considerata fissa, pari a 
+\begin{equation}
+x = \frac{7}{9}\tilde{x}_0.
+\end{equation}
+L'energia del fotone viene equiripartita tra le due particelle prodotte.
+
+Ogni particella creata viene emessa ad un certo angolo azimutale $\phi$ estratto casualmente tra 0 e $2\pi$ e ad uno zenitale $\theta$. Quest'ultimo  è stato calcolato come
 \begin{equation}
 \langle\theta\rangle = \frac{m_e c^2}{E_e}
 \end{equation}
-per l'emissione dei gamma di bremsstrahlung, e di: 
+per l'emissione dei gamma di bremsstrahlung e 
 \begin{equation}
 \langle\theta\rangle = \frac{m_e c^2}{E_\gamma}
 \end{equation}
-per l'emissione di coppie. 
-\\Conoscendo $\theta$ e conoscendo la distanza reale percorsa ($x$) dalle particelle, possiamo risalire alla distanza verticale ($s$) compiuto attraverso la trigonometria: $s = x\cos{\theta}$. 
-\\Questi processi continuano, di volta in volta, fino al raggiungimento delle rispettive energie di soglia. 
+per la produzione di coppie. 
+
+Questi due processi vengono eseguiti a cascata su tutti i prodotti fintanto che questi hanno energia sufficiente o non hanno percorso una distanza maggiore dello spessore dello step attuale.
 
 \subsection{Riassorbimento dello sciame}
-Per quanto riguarda il riassorbimento dello sciame, si è proceduto nuovamente in modo diverso per elettroni/positroni e raggi gamma. 
-\\Per quanto riguarda gli elettroni, una volta che hanno raggiunto valori di energia sotto soglia, percorrono uno strato atmosferico pari al range di percorrenza degli elettroni in un mezzo che, da letteratura \citep{RevModPhys.24.28}, risulta pari a: 
+\label{subsec:riassorb}
+Per quanto riguarda il riassorbimento dello sciame, si è proceduto nuovamente in modo diverso per leptoni e raggi gamma. 
+
+Per i leptoni, una volta che questi non hanno più energia sufficiente ad emettere fotoni, percorrono una distanza estratta da una distribuzione esponenziale con parametro pari al range elettronico in un mezzo che, da letteratura \citep{RevModPhys.24.28}, risulta pari a: 
 \begin{equation}
 R_{max} = \begin{cases} 0.412 E_e^{1.265-0.0954 \ln{E_e}}     & 0.01\le E_e \le 2.5\unit{MeV} \\ 
                                           0.530 E_e - 0.106                                   & E_e > 2.5\unit{MeV}. 
                    \end{cases}
 \end{equation}
-I raggi gamma vengono invece subito abbandonati una volta sotto la soglia della produzione di coppia (non si considerano dunque effetti quali lo scattering Compton e l'effetto fotoelettrico). 
 
-\section{Descrizione codice}
-Il codice consta di tre classi (Vector3D, Particle, Costants) più quella di esecuzione (Simulation.C). 
-\\Nella classe "Vector3D" (.h e .cpp), sono presenti tutti i metodi e le proprietà necessarie al calcolo vettoriale che si utilizzerà nel programma per definire verso e direzione delle particelle. 
-\\Nella classe "Particle" (.h e .cpp) sono riportati invedce i metodi che permettono la propagazione alle particelle e di "compiere azioni" quali la bremsstrahlung o la produzione di coppia. 
-\\Poi nella classe "Costants" (.h) sono semplicemente riportate le costati più usate nella simulazione (e.g. energie di soglia, masse delle particelle, ecc\dots). 
-\\Infine, in "Simulation.C" è presente il ciclo principale di esecuzione del programma. Il funzionamento di tale ciclo è quello che segue. 
-\\Si parte con una particella (raggio gamma) ad una certa energia E. Questo gamma, e tutti quelli che verranno creati nella simulazione, fanno creazione di coppia ad una distanza fissa pari a: 
-\begin{equation}
-x = \frac{7}{9}\tilde{x}_0. 
-\end{equation}
-come noto da manuali. Si hanno dunque un elettrone ed un positrone che verranno trasportati singolarmente per vedere se e quando interagiscono. Si è proceduto estraendo casualmente un valore di energia tra $1 \unit{keV}$ ed $E_e$ (energia dell'elettrone/positrone generatore). Il valore minimo è stato scelto arbitrariamente decidendo di ignorare i raggi gamma di energia inferiore al keV mentre il valore massimo è stato scelto uguale ad $E_e$ per una ovvia conservazione di energia. Da (\ref{eq:Ngamma}), nota l'energia dell'elettrone/positrone $E_e$, ricavo il libero cammino medio $d$ ponendo $N_\gamma = 1$ e $k_{min}$, $k_{max} = 1 \unit{keV}$, $E_e$. Il risultato, che ci dà quindi la distanza entro la quale ho per certo la produzione di un raggio gamma, lo si usa come coefficiente di una distribuzione esponenziale con coefficiente $d$ da cui si estrae randomicamente la distanza in cui consideriamo emesso il fotone. Ho quindi la distanza in cui viene emesso un $\gamma$ di bremsstrahlung di energia estratta, di nuovo randomicamente, tra $1\unit{keV}$ ed $E_e$. Bisogna ora valutare se questa energia estratta risulta superiore a $10\unit{MeV}$ (ovvero è in grado di fare produzione di coppie). In caso affermativo, si genererà appunto un fotone di energia pari all'energia estratta e si toglierà questa energia all'elettrone generatore. In caso contrario, non si genera il fotone (che "morirà subito" in quanto non sarà in grado di fare neanche una volta produzione di coppia) ma si conserva lo stesso l'energia sottraendo l'energia estratta per il fotone, all'energia dell'elettrone generatore. Questo processo viene fatto per ogni elettrone che si viene a creare nello sciame con energia suffiente per fare bremsstrahlung (energia che di volta in voltà andrà a diminuire) ed in ogni distanza estratta casualmente da una distribuzione esponenziale di coefficiente $d$. 
-\\A livello di codice, ogni particella viene trasportata e si valuta, in generale, se essa interagisce o no. 
-\\Se non interagisce, ma ha energia sufficiente per farlo (i.e. energia sopra soglia), viene portata avanti di uno step ed il ciclo ricomincia.Se l'energia è sotto soglia, inizia il processo di riassorbimento in funzione del tipo di particella in esame (come è stato riportato nel paragrafo predente). 
-\\Se interagisce, si immagazinano i prodotti: 
-\begin{enumerate}
-\item "elettrone e positrone" nel caso di produzione di copppia; 
-\item "particella primaria (elettrone o positrone) e raggio gamma" nel caso di bremsstrahlung da parte di elettrone o positrone.
-\end{enumerate}
-Per distinguere i casi "1." e "2.", si valuta la presenza o meno del raggio gamma nella coppia di particelle create. In caso affermativo, significa che il fenomeno avvenuto è la bremsstrahlung e dunque l'elettrone/positrone generatore viene mantenuto (con energia pari a quella precedente meno l'energia del gamma emesso). In caso negativo il fenomeno avvenuto è la creazione di coppia ed il ciclo semplicemente si chiude tornando pronto per essere ripetuto. Quanto detto, è mostrato nel diagramma di flusso in \figurename~\ref{\fpath jpg:MainCicle}. 
+I raggi gamma, invece, vengono subito abbandonati quando la loro energia è sotto la soglia della produzione di coppia.
+Per semplicità, non vengono considerati processi quali lo scattering Compton e l'effetto fotoelettrico. 
+
+L'energia delle particelle assorbite in questo step viene quindi raccolta in un grafico, insieme a quella dei fotoni emessi a bassa energia.
+
+\section{Descrizione del codice}
+Il codice consta di due classi (\textit{Vector3D}, \textit{Particle}), un header contenente le costanti e due macro (\textit{Simulation.C}, \textit{CompileProject.C}).
+ 
+La classe \textit{Vector3D} è utilizzata per le operazioni di calcolo vettoriale in coordinate cilindriche. Le posizioni e le direzioni di moto delle particelle sono gestite con oggetti di questa classe.
+
+La classe \textit{Particle} descrive le variabili cinematiche delle particelle e contiene i metodi \textit{Divide} e \textit{Propagate}, usati rispettivamente per computare i processi di produzione di particelle e l'assorbimento. Questi ritornano dei valori booleani. Nel caso di \textit{Divide}, questi sono pari a vero se il processo viene eseguito e falso altrimenti. Per \textit{Propagate}, vero corrisponde ad una particella trasportata e falso ad una assorbita.
+
+La macro \textit{Simulation.C} contiene le funzioni \textit{EMShower} e \textit{ElongationFit}, responsabili rispettivamente della simulazione di un singolo sciame elettromagnetico e del plot dell'elongation rate.
+
+Per ogni simulazione si è considerato come raggio cosmico primario un gamma con energia compresa tra $10^2\unit{MeV}$ e $10^5\unit{MeV}$. 
+
+Le particelle prodotte ad ogni step vengono immagazzinate in un oggetto del tipo vector<Particle>. Questo viene quindi passato in input allo step successivo.
+
 \begin{figure} [h!]
 \centering
 \includegraphics[width=11cm, height=11cm, keepaspectratio]{\fpath MainCicle}
 \caption{Ciclo principale. }
-\label{\fpath jpg:MainCicle}
+\label{img:MainCicle}
 \end{figure} 
-\\L'immagazinamento delle particelle, viene fatto attraverso il riempimento, di step in step, di due vector che si aggiornano a vicenda. 
 
-\section{Compilazione codice}
-Per la compilazione del codice \dots \\\\\\
+La logica generale della simulazione è mostrata nella figura \ref{img:MainCicle}. Per ogni particella viene eseguito il metodo \textit{Divide} e, nel caso di un esito positivo, si immagazzinano i possibili prodotti nel vector di output. Quindi viene immagazzinata la particella stessa se questa non è un fotone. Nel caso di un esito negativo di \textit{Divide}, viene eseguita la funzione \textit{Propagate}, la quale valuta se l'energia della particella sia sufficiente ad effettuare un processo di produzione di coppia o bremsstrahlung. In caso affermativo, questa viene inserita tra gli output, altrimenti viene eseguito l'assorbimento della stessa. Nel caso in cui la particella debba essere assorbita in uno step successivo, viene immagazzinata tra gli output. 
+
+
+\section{Compilazione ed esecuzione}
+La macro \textit{CompileProject.C} contiene la funzione \textit{CompileSimulation}, che si occupa della compilazione di tutti i file necessari per l'esecuzione della simulazione.
+
+Per l'esecuzione, è sufficiente utilizzare la funzione \textit{EMShower}, specificando l'energia del raggio cosmico primario ed, eventualmente, un seed per il generatore casuale, oppure la funzione \textit{ElongationFit}, specificando l'energia minima e massima e l'incremento percentuale in energia per ogni step.
 
 \section{Risultati e confronti con altri modelli}
 Come conferma della bontà della simulazione, si sono paragonati i risultati ottenuti con quelli di altre simulazioni. In particolare si può notare come l'andamento dell'energia per strato atmosferico ottenuto sia in linea con quello ottenuto con simulazioni svolte con Geant4 e come il coefficiente angolare ottenuto dallo studio dell'elongation rate sia effettivamente prossimo a quello stimato nel modelli di Heitler (si veda Appendice B). 
@@ -135,6 +168,7 @@ Come conferma della bontà della simulazione, si sono paragonati i risultati ott
 \appendix
 \section{Appendici}
 \subsection{Calcolo dell'energia critica e della lunghezza di radiazione per elettroni e positroni in atmosfera}
+\label{appendix:a}
 Si consideri un'atmosfera composta da: $78\% N_2$, $21\% O_2$ ed $1\% Ar$. Da \cite{Olive:2016xmw} si hanno i seguenti valori: 
 \begin{table}[h!]
 \centering

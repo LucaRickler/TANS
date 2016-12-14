@@ -12,8 +12,10 @@
 #include "Particle.h"
 #endif
 
-void EMShower (double init_energy, double &max_point, int seed = 42, bool print = true) {
+double EMShower (double init_energy, int seed = 42, bool verbose = true) {
   vector<Particle> *all_particles = new vector<Particle>[2]();
+
+  //gStyle->SetStatFontSize(0.1);
 
   const int max_particles = 1.e7;
 
@@ -31,13 +33,22 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
   int id = 0, id2 = 1;
 
   TH1D* particle_count = new TH1D("Particelle per strato atmosferico", "Particelle per strato atmosferico", bin_number, 0,bin_number*dh);
+  particle_count->GetXaxis()->SetTitle("#tilde{x}_{0} [g/cm^{2}]");
+  particle_count->GetXaxis()->SetTitleSize(0.045);
+  particle_count->GetYaxis()->SetTitle("Numero di particelle");
+  particle_count->GetYaxis()->SetTitleSize(0.045);
+
   TH1D* energy_loss = new TH1D("Energia rilasicata per strato atmosferico", "Energia rilasicata per strato atmosferico", bin_number, 0,bin_number*dh);
+  energy_loss->GetXaxis()->SetTitle("#tilde{x}_{0} [g/cm^{2}]");
+  energy_loss->GetXaxis()->SetTitleSize(0.045);
+  energy_loss->GetYaxis()->SetTitle("(1/E_{0})dE/d#tilde{x}");
+  energy_loss->GetYaxis()->SetTitleSize(0.045);
   double energy_lost_here = 0.0;
   all_particles[0].push_back(Particle(PGAMMA, init_energy, Vector3D(0.,0.,1.), Vector3D(0.,0.,h), true));
 
   for(int k = 1; k <= bin_number; k++) {
-    if (print)
-      cout << "Ciclo #" << k << endl;
+    if (verbose)
+      cout << "Step #" << k;
     counter = 0;
     energy_lost_here = 0.0;
     id2 = (id+1)%2;
@@ -60,21 +71,23 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
     }
     //Raccolgo i dati
     particle_count->SetBinContent(k,all_particles[id].size());
+    if(verbose)
+      cout << " - Particelle: " << all_particles[id].size() << endl;
     if(all_particles[id].size() > max){
       max = all_particles[id].size();
       max_k = k;
     }
-    energy_loss->SetBinContent(k,energy_lost_here/init_energy);
+    energy_loss->SetBinContent(k,energy_lost_here/init_energy/dh);
     all_particles[id].clear();
     id = id2;
     h = h + dh;
   }
 
-  max_point = max_k * dh;
-
+  double max_point = max_k * dh;
   cout << "Punto di massimo: " << max_point << endl;
+
   //print dei dati
-  if(print) {
+  if(verbose) {
     new TCanvas();
     particle_count->DrawCopy();
     new TCanvas();
@@ -85,14 +98,22 @@ void EMShower (double init_energy, double &max_point, int seed = 42, bool print 
     delete particle_count;
   }
   delete[] all_particles;
+
+  return max_point;
 }
 
 void ElongationFit(double Emin, double Emax, double increment, int seed = 42) {
-  TRandom2 rnd(42);
+  TRandom2 rnd(seed);
 
   const int samples = 10;
 
   TH1D *data = new TH1D("Elongation Rate", "Elongation Rate", 10000, TMath::Log10(Emin), TMath::Log10(Emax));
+  data->GetXaxis()->SetTitle("Log_{10}(E_{0})");
+  data->GetXaxis()->SetTitleSize(0.045);
+  data->GetYaxis()->SetTitle("#tilde{x}_{0}^{max} [g/cm^{2}]");
+  data->GetYaxis()->SetTitleSize(0.045);
+
+  //data->SetStats(0);
 
   double energy = Emin;
   int bin = 1;
@@ -102,7 +123,7 @@ void ElongationFit(double Emin, double Emax, double increment, int seed = 42) {
     cout << "E: " << energy << endl;
     bin = data->GetXaxis()->FindBin(TMath::Log10(energy));
     for(int i = 0; i < samples; i++) {
-      EMShower(energy, raws[i], rnd.Rndm(), false);
+      raws[i] = EMShower(energy, rnd.Rndm(), false);
       mean += raws[i]/samples;
     }
 
@@ -112,11 +133,12 @@ void ElongationFit(double Emin, double Emax, double increment, int seed = 42) {
 
     data->SetBinContent(bin,mean);
     data->SetBinError(bin,stdev);
-    energy *= increment;
+    energy += increment*energy;
   }
 
   new TCanvas();
+  gStyle->SetOptFit(1);
   data->SetMarkerStyle(20);
-  data->Draw("p");
+  data->Draw("pe");
   data->Fit("pol1");
 }
