@@ -38,7 +38,7 @@
 
 \begin{abstract}
 Scopo del seguente programma è la simulazione, con metodi Monte Carlo, dello sviluppo di uno sciame elettromagnetico in atmosfera. 
-\\Tale sciame si può immaginare come prodotto dall'interazione di un raggio cosmico primario con gli elementi componenti l'atmosfera terrestre. Si dà la possibilità all'utente di scegliere l'energia della particella (un raggio gamma) che darà inizio allo sciame in un intervallo di energie tra i $10^2\unit{MeV}$ ed i $10^5\unit{MeV}$. 
+\\Tale sciame si può immaginare come prodotto dall'interazione di un raggio cosmico primario con gli elementi componenti l'atmosfera terrestre. Si dà la possibilità all'utente di scegliere l'energia della particella (un raggio gamma) che darà inizio allo sciame in un intervallo di energie tra i $10^2\unit{MeV}$ ed i $10^8\unit{MeV}$. 
 \\I risultati di tale simulazione possono essere confrontati con quelli di altre simulazioni presenti allo stato dell'arte. 
 \end{abstract}
 
@@ -46,10 +46,10 @@ Scopo del seguente programma è la simulazione, con metodi Monte Carlo, dello sv
 %TESTO----------------------------------------------------------------------------------------------------------------------------------%
 
 \section{Sciami atmosferici}
-Un raggio cosmico primario può generare una cascata di particelle secondarie. Questo sciame di particelle viene comunemente chiamato \textit{Extensive Air Showers} (EAS). In particolare questi sciami sono composti sia da una componente elettromagnetica che da una adronica. Nella presente simulazione, si focalizzerà l'attenzione sulla sola componente elettromagnetica generata da un raggio gamma considerato come particella primaria (sciami generati da elettroni o positroni sono, dopo poche lunghezze di radiazione, del tutto analoghi a quelli generati da raggi gamma). 
+Un raggio cosmico primario può generare una cascata di particelle secondarie. Questo sciame di particelle viene comunemente chiamato \textit{Extensive Air Showers} (EAS). In particolare questi sciami sono composti sia da una componente elettromagnetica che da una adronica. Nella presente simulazione, si focalizzerà l'attenzione sulla sola componente elettromagnetica generata da un raggio $\gamma$ considerato come particella primaria (sciami generati da elettroni o positroni sono, dopo poche lunghezze di radiazione, del tutto analoghi a quelli generati da raggi gamma). 
 
 \subsection{Sciami elettromagnetici}
-Come detto, si può considerare uno sciame elettromagnetico come prodotto dall'interazione di un elettrone, positrone o raggio gamma con l'atmosfera terrestre. Date le alte energie in gioco ($\approx10^4\unit{MeV}$), i fenomeni di interazione predominanti per queste particelle a tali energie sono:
+Come detto, si può considerare uno sciame elettromagnetico come prodotto dall'interazione di un elettrone, positrone o raggio $\gamma$ con l'atmosfera terrestre. Date le alte energie in gioco ($\approx10^6\unit{MeV}$), i fenomeni di interazione predominanti per queste particelle a tali energie sono:
 \begin{itemize}
 \item \textbf{bremsstrahlung} per gli elettroni ed i positroni;
 \item \textbf{produzione di coppia} per i raggi gamma.
@@ -62,7 +62,7 @@ Per quanto riguarda l'energia di soglia per la produzione di coppie, si è scelt
 \begin{figure} [!htb]
 \centering
 \includegraphics[width=11cm, height=11cm, keepaspectratio]{\fpath AttenuazioneFotoni}
-\caption{Diversi meccanismi di attenuazione di fotoni in un mezzo in funzione dell'energia. }
+\textit{\caption{Diversi meccanismi di attenuazione di fotoni in un mezzo in funzione dell'energia. }}
 \label{\fpath jpg:AttenuazioneFotoni}
 \end{figure}
 
@@ -71,20 +71,20 @@ Sono dunque stati considerati, fino al raggiungimento delle rispettive energie c
 \subsection{Sviluppo dello sciame}
 L'atmosfera è stata suddivisa in strati verticali di spessore pari ad una lunghezza di radiazione $\tilde{x}_0 \unit{[g/cm^2]}$. Nel primo strato viene iniettato il raggio cosmico primario che, se sufficientemente energetico (i.e. $E > E_{soglia}$), interagirà attraverso la produzione di coppia o la radiazione di bremsstrahlung. Il processo è simulato ad intervalli costanti $dh$ (step) pari a $0.1\unit{\tilde{x}_0}$.
 
-Il comportamento dei leptoni e dei raggi gamma è simulato in modi diversi per ogni specie.
+Il comportamento dei leptoni e dei raggi $\gamma$è simulato in modi diversi per ogni specie.
  
 Cominciando dalla radiazione bremsstrahlung, dalla letteratura \citep{PassParticMatterPDG}, si trova che il numero di fotoni prodotti da un elettrone di energia $E_e$ in funzione dello spazio percorso e della loro energia, compresa tra $k_{min}$ e $k_{max}$, risulta essere pari a: 
 \begin{equation}
 N_\gamma = \frac{d}{\tilde{x}_0}\left[\frac{4}{3}\ln{\frac{k_{max}}{k_{min}}}-\frac{4(k_{max} - k_{min})}{3E_e}+\frac{k_{max}^2 - k_{min}^2}{2E_e^2}\right],
 \label{eq:Ngamma}
 \end{equation}
-valida per distanze percorse $d \ll \tilde{x}_0 \unit{[g/cm^2]}$. Si è quindi ricavato il libero cammino medio degli elettroni come la distanza alla quale il numero di gamma emessi è pari ad uno:
+valida per distanze percorse $d \ll \tilde{x}_0 \unit{[g/cm^2]}$. Si è quindi ricavato il libero cammino medio degli elettroni come la distanza alla quale il numero di $\gamma$ emessi è pari ad uno:
 \begin{equation}
 \lambda_{BS} = d = \left({\frac{\tilde{x}_0}{N_\gamma}}\right)_{N_\gamma \rightarrow 1}.
 \label{eq:lambdaBS}
 \end{equation}
 
-Sono stati considerati come valori di $k_{min}$ e $k_{max}$ rispettivamente $1\unit{keV}$ e l'energia del leptone. Il valore minimo è stato scelto arbitrariamente decidendo di ignorare i raggi gamma di energia inferiore al keV.
+Sono stati considerati come valori di $k_{min}$ e $k_{max}$ rispettivamente $1\unit{keV}$ e l'energia del leptone. Il valore minimo è stato scelto arbitrariamente decidendo di ignorare i raggi $\gamma$ di energia inferiore al keV.
 
 La distanza percorsa da ogni singola particella è stata estratta da una distribuzione esponenziale considerando questo libero cammino medio quale parametro. L'energia emessa in forma di fotone è stata estratta tra $1 \unit{keV}$ e l'energia $E$ dell'elettrone per inportance sampling dalla sezione d'urto in funzione dell'energia $k$ del fotone emesso:
 \begin{equation}
@@ -96,7 +96,7 @@ Nel caso in cui l'energia emessa sia inferiore alla soglia della produzione di c
 
 \bigskip
 
-I gamma emessi possono generare elettroni e positroni per produzione di coppia se sufficientemente energetici. La distanza di interazione è stata considerata fissa, pari a 
+I $\gamma$ emessi possono generare elettroni e positroni per produzione di coppia se sufficientemente energetici. La distanza di interazione è stata considerata fissa, pari a 
 \begin{equation}
 x = \frac{7}{9}\tilde{x}_0.
 \end{equation}
@@ -106,7 +106,7 @@ Ogni particella creata viene emessa ad un certo angolo azimutale $\phi$ estratto
 \begin{equation}
 \langle\theta\rangle = \frac{m_e c^2}{E_e}
 \end{equation}
-per l'emissione dei gamma di bremsstrahlung e 
+per l'emissione dei $\gamma$di bremsstrahlung e 
 \begin{equation}
 \langle\theta\rangle = \frac{m_e c^2}{E_\gamma}
 \end{equation}
@@ -139,14 +139,14 @@ La classe \textit{Particle} descrive le variabili cinematiche delle particelle e
 
 La macro \textit{Simulation.C} contiene le funzioni \textit{EMShower} e \textit{ElongationFit}, responsabili rispettivamente della simulazione di un singolo sciame elettromagnetico e del plot dell'elongation rate.
 
-Per ogni simulazione si è considerato come raggio cosmico primario un gamma con energia compresa tra $10^2\unit{MeV}$ e $10^5\unit{MeV}$. 
+Per ogni simulazione si è considerato come raggio cosmico primario un $\gamma$ con energia compresa tra $10^2\unit{MeV}$ e $10^8\unit{MeV}$. 
 
 Le particelle prodotte ad ogni step vengono immagazzinate in un oggetto del tipo vector<Particle>. Questo viene quindi passato in input allo step successivo.
 
 \begin{figure} [h!]
 \centering
 \includegraphics[width=11cm, height=11cm, keepaspectratio]{\fpath MainCicle}
-\caption{Ciclo principale. }
+\textit{\caption{Logica del programma.}}
 \label{img:MainCicle}
 \end{figure} 
 
@@ -158,9 +158,39 @@ La macro \textit{CompileProject.C} contiene la funzione \textit{CompileSimulatio
 
 Per l'esecuzione, è sufficiente utilizzare la funzione \textit{EMShower}, specificando l'energia del raggio cosmico primario ed, eventualmente, un seed per il generatore casuale, oppure la funzione \textit{ElongationFit}, specificando l'energia minima e massima e l'incremento percentuale in energia per ogni step.
 
+Il codice è stato testato fino ad energie dell'ordine di $100 \unit{TeV}$ per questioni di potenza di calcolo.
+
 \section{Risultati e confronti con altri modelli}
+
+\begin{figure} [!htb]
+\centering
+\includegraphics[width=9cm, keepaspectratio]{\fpath geant}
+\textit{\caption{Risultati di una simulazione eseguita con Geant4. Sono mostrati il numero di particelle (punti), l'energia persa (linea continua). \cite{matthews2005heitler}}
+\label{img:geant}
+\end{figure} 
+
+\begin{figure} [!htb]
+\centering
+\includegraphics[width=9cm, keepaspectratio]{\fpath N_1e8}
+\textit{\caption{Numero di particelle per strato atmosferico da uno sciame con primario di energia $100 \unit{TeV}$.}}
+\label{img:En_1e8}
+\end{figure} 
+
+\begin{figure} [!htb]
+\centering
+\includegraphics[width=9cm, keepaspectratio]{\fpath En_1e8}
+\textit{\caption{Energia persa per strato atmosferico da uno sciame con primario di energia $100 \unit{TeV}$.}}
+\label{img:N_1e8}
+\end{figure}
+
+\begin{figure} [!htb]
+\centering
+\includegraphics[width=9cm, keepaspectratio]{\fpath Eleongation_200_1e6}
+\textit{\caption{Elongation rate per sciami di energia compresa tra $200\unit{MeV}$ e $1\unit{TeV}$. Sono mostrati i dati della simulazione (punti) ed il fit lineare (retta rossa).}}
+\label{img:elongation}
+\end{figure}
+
 Come conferma della bontà della simulazione, si sono paragonati i risultati ottenuti con quelli di altre simulazioni. In particolare si può notare come l'andamento dell'energia per strato atmosferico ottenuto sia in linea con quello ottenuto con simulazioni svolte con Geant4 e come il coefficiente angolare ottenuto dallo studio dell'elongation rate sia effettivamente prossimo a quello stimato nel modelli di Heitler (si veda Appendice B). 
-\\MATTERE CONFRONTI TRA FIGURA BELLA NOSTRA CON FIGURA DELL'ARTICOLO E INSERIRE FIT LINEARE CONFRONTANDO IL COEFFICIENTE ANGOLARE CON QUELLO STIMATO NEL MODELLO DI HEITLER. 
 
 %APPENDICI----------------------------------------------------------------------------------------------------------------------------------%
 
@@ -182,19 +212,19 @@ $Ar$:             &   118              &   19.55                               &
 \bottomrule
 \end{tabular}
 \end{table}
-\\Da questi valori è possibile ricavare una lunghezza di radiazione $\tilde{x}_0$ ed una energia critica media per elettroni e positroni in atmosfera: \\
+\\Da questi valori è possibile ricavare una lunghezza di radiazione $\tilde{x}_0$ media per elettroni e positroni in atmosfera: \\
 \begin{equation*}
-\tilde{x}_0 = \frac{37.99*78+34.24*21+19.55*1}{78+21+1} \approx 37.02\unit{g/cm^2};
+\tilde{x}_0 = \frac{\sum\tilde{x}_0^i p^i}{\sum p^i} \approx 37.02\unit{g/cm^2},
 \end{equation*}
-\\
+dove $p^i$ è la concentrazione percentuale della specie i-esima. Per l'energia critica:
 \begin{equation*}
-E_c = \frac{\frac{91.74 + 89.71}{2}*78+\frac{81.45 + 79.62}{2}*21+\frac{38.03 + 37.06}{2}*1}{78+21+1} \approx 88.05\unit{MeV};
+E_c = \frac{\sum \frac 1 2 {\left[\left(E_c^-\right)^i + \left(E_c^+\right)^i\right]} p^i}{\sum p^i} \approx 88.05\unit{MeV},
 \end{equation*}
-\\che sono i valori utilizzati nella simulazione per gli elettroni ed i positroni. 
+dove $\left(E_c^-\right)^i$ ed $\left(E_c^+\right)^i$ sono le energie critiche per elettroni e positroni per la specie i-esima.
 
 
 \subsection{Modello di Heitler}
-
+\label{appendix:b}
 Lo sviluppo di uno sciame elettromagnetico, basato su due processi fondamentali (produzione di coppia e bremsstrahlung), è comunemente descritto, con le opportune approssimazioni e semplificazioni, dal modello di Heitler. 
 \\Uno sciame E.M. è generato da un $\gamma$ o un $e^\pm$ che interagisce con l'atmosfera terrestre. La perdita di energia da parte di un $\gamma$ o un $e^\pm$ in atmosfera è descrivibile da: 
 \begin{equation}
@@ -212,15 +242,15 @@ da cui ottengo:
 \begin{equation}
 \xi = \lambda_T \ln{2}. 
 \end{equation}
-Ciò significa che un $e^\pm$ emette, per bremsstrahlung, un $\gamma$ dopo avere percorso una distanza di dimezzamento $d = \lambda_T \ln{2}$. Un $\gamma$ dopo avere percorso la stessa distanza (in realtà sarebbe $\lambda_p = 9/7 \lambda_T$ ma approssimo $\lambda_p \approx \lambda_T$) dà origine ad una coppia elettrone positrone. 
-\\Considero che, ad ogni interazione, l'energia dei $e^\pm$ (e dei $\gamma$) venga divisa \textit{a metà}. Queste sono tutte approssimazioni fatte per semplificare il modello. In \figurename~\ref{\fpath jpg:ModelloHeitler} è schematizzato lo sviluppo di uno sciame E.M. generato da un $\gamma$ primario interagente con l'atmosfera. 
+Ciò significa che un $e^\pm$ emette, per bremsstrahlung, un  $\gamma$ dopo avere percorso una distanza di dimezzamento $d = \lambda_T \ln{2}$. Un  $\gamma$ dopo avere percorso la stessa distanza (in realtà sarebbe $\lambda_p = 9/7 \lambda_T$ ma approssimo $\lambda_p \approx \lambda_T$) dà origine ad una coppia elettrone positrone. 
+\\Considero che, ad ogni interazione, l'energia dei $e^\pm$ (e dei  $\gamma$) venga divisa \textit{a metà}. Queste sono tutte approssimazioni fatte per semplificare il modello. In \figurename~\ref{\fpath jpg:ModelloHeitler} è schematizzato lo sviluppo di uno sciame E.M. generato da un  $\gamma$ primario interagente con l'atmosfera. 
 \begin{figure} [h!]
 \centering
-\includegraphics[width=11cm, height=11cm, keepaspectratio]{\fpath ModelloHeitler}
-\caption{Sviluppo in atmosfera di uno sciame elettromagnetico generato da un $\gamma$ (dove "$n$" indica il numero di lunghezze di radiazione, considerate uguali per $e^\pm$ e $\gamma$, attraversate dallo sciame). }
+\includegraphics[width=5cm, height=11cm, keepaspectratio]{\fpath ModelloHeitler}
+\textit{\caption{Sviluppo in atmosfera di uno sciame elettromagnetico generato da un  $\gamma$ (dove "$n$" indica il numero di lunghezze di radiazione, considerate uguali per $e^\pm$ e  $\gamma$, attraversate dallo sciame). }}
 \label{\fpath jpg:ModelloHeitler}
 \end{figure}
-\\Consideriamo uno sciame iniziato da un $\gamma$ di energia $E_0$. Dopo $n$ lunghezze di dimezzamento $d$ avremo $2^n$ particelle di energia $E_0/2^n$ l'una. 
+\\Consideriamo uno sciame iniziato da un  $\gamma$ di energia $E_0$. Dopo $n$ lunghezze di dimezzamento $d$ avremo $2^n$ particelle di energia $E_0/2^n$ l'una. 
 \\Dunque lo spazio percorso dopo $n$ lunghezze di dimezzamento $d$ sarà: 
 \begin{equation}
 X = n d, 
