@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.5)  14 DEC 2016 16:01
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015/Debian) (preloaded format=pdflatex 2016.8.5)  14 DEC 2016 16:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -771,66 +771,95 @@ File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 54.
 
-
-LaTeX Warning: Reference `appendix:a' on page 3 undefined on input line 59.
-
-
-Package natbib Warning: Citation `Olive:2016xmw' on page 3 undefined on input l
-ine 59.
-
-<./Figs/AttenuazioneFotoni.png, id=13, 903.375pt x 654.445pt>
+<./Figs/AttenuazioneFotoni.png, id=14, 903.375pt x 654.445pt>
 File: ./Figs/AttenuazioneFotoni.png Graphic file (type png)
 
 <use ./Figs/AttenuazioneFotoni.png>
 Package pdftex.def Info: ./Figs/AttenuazioneFotoni.png used on input line 64.
 (pdftex.def)             Requested size: 312.988pt x 226.74242pt.
- [3]
-
-Package natbib Warning: Citation `PassParticMatterPDG' on page 4 undefined on i
-nput line 76.
-
-[4 <./Figs/AttenuazioneFotoni.png>]
-
-Package natbib Warning: Citation `RevModPhys.24.28' on page 5 undefined on inpu
-t line 121.
-
-[5] <./Figs/MainCicle.png, id=40, 561.09625pt x 636.3775pt>
+ [3] [4 <./Figs/AttenuazioneFotoni.png>]
+[5] <./Figs/MainCicle.png, id=41, 561.09625pt x 636.3775pt>
 File: ./Figs/MainCicle.png Graphic file (type png)
 
 <use ./Figs/MainCicle.png>
 Package pdftex.def Info: ./Figs/MainCicle.png used on input line 148.
 (pdftex.def)             Requested size: 275.94984pt x 312.97353pt.
  [6 <./Figs/MainCicle.png>]
-<./Figs/geant.jpg, id=45, 210.41443pt x 143.26088pt>
+<./Figs/N_1e8.png, id=46, 700.6175pt x 475.7775pt>
+File: ./Figs/N_1e8.png Graphic file (type png)
+ <use ./Figs/N_1e8.png>
+Package pdftex.def Info: ./Figs/N_1e8.png used on input line 168.
+(pdftex.def)             Requested size: 256.0748pt x 173.90054pt.
+
+<./Figs/En_1e8.png, id=47, 700.6175pt x 475.7775pt>
+File: ./Figs/En_1e8.png Graphic file (type png)
+ <use ./Figs/En_1e8.png>
+Package pdftex.def Info: ./Figs/En_1e8.png used on input line 175.
+(pdftex.def)             Requested size: 256.0748pt x 173.90054pt.
+
+<./Figs/geant.jpg, id=48, 210.41443pt x 143.26088pt>
 File: ./Figs/geant.jpg Graphic file (type jpg)
  <use ./Figs/geant.jpg>
-Package pdftex.def Info: ./Figs/geant.jpg used on input line 167.
-(pdftex.def)             Requested size: 256.0748pt x 174.35393pt.
-)
-Runaway argument?
-{\caption {Risultati di una simulazione eseguita con Geant4. Sono mos\ETC.
-! File ended while scanning use of \textit .
-<inserted text> 
-                \par 
-<*> Relazione.tex
-                 
-I suspect you have forgotten a `}', causing me
-to read past where you wanted me to stop.
-I'll try to recover; but if the error is serious,
-you'd better type `E' or `X' now and fix your file.
+Package pdftex.def Info: ./Figs/geant.jpg used on input line 185.
+(pdftex.def)             Requested size: 199.16928pt x 135.60739pt.
 
-! Emergency stop.
-<*> Relazione.tex
-                 
-*** (job aborted, no legal \end found)
+[7 <./Figs/N_1e8.png>]
+<./Figs/Eleongation_200_1e6.png, id=53, 700.6175pt x 475.7775pt>
+File: ./Figs/Eleongation_200_1e6.png Graphic file (type png)
 
- 
+<use ./Figs/Eleongation_200_1e6.png>
+Package pdftex.def Info: ./Figs/Eleongation_200_1e6.png used on input line 196.
+
+(pdftex.def)             Requested size: 256.0748pt x 173.90054pt.
+ [8 <./Figs/En_1e8.png> <./Figs/geant.jpg>]
+Underfull \hbox (badness 10000) in paragraph at lines 208--222
+
+ []
+
+[9 <./Figs/Eleongation_200_1e6.png>]
+<./Figs/ModelloHeitler.JPG, id=60, 319.94531pt x 253.69781pt>
+File: ./Figs/ModelloHeitler.JPG Graphic file (type jpg)
+
+<use ./Figs/ModelloHeitler.JPG>
+Package pdftex.def Info: ./Figs/ModelloHeitler.JPG used on input line 255.
+(pdftex.def)             Requested size: 142.26537pt x 112.80806pt.
+ [10 <./Figs/ModelloHeitler.JPG>]
+(./Relazione.bbl [11]
+LaTeX Font Info:    Try loading font information for T1+cmtt on input line 19.
+ (/usr/share/texlive/texmf-dist/tex/latex/base/t1cmtt.fd
+File: t1cmtt.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)) [12] (./Relazione.aux) ) 
 Here is how much of TeX's memory you used:
- 6283 strings out of 494901
- 81579 string characters out of 6179487
- 168080 words of memory out of 5000000
- 9424 multiletter control sequences out of 15000+600000
- 19146 words of font info for 56 fonts, out of 8000000 for 9000
+ 6356 strings out of 494901
+ 83155 string characters out of 6179487
+ 169318 words of memory out of 5000000
+ 9477 multiletter control sequences out of 15000+600000
+ 19459 words of font info for 57 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 38i,8n,39p,825b,260s stack positions out of 5000i,500n,10000p,200000b,80000s
-!  ==> Fatal error occurred, no output PDF file produced!
+ 38i,17n,39p,881b,281s stack positions out of 5000i,500n,10000p,200000b,80000s
+ </home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/
+ectt1000.600pk> </home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1200.600
+pk> </home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1000.600pk> </home/l
+uca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm0900.600pk> </home/luca/.texmf-v
+ar/fonts/pk/ljfour/jknappen/ec/ecbx0900.600pk> </home/luca/.texmf-var/fonts/pk/
+ljfour/jknappen/ec/ecbx1000.600pk> </home/luca/.texmf-var/fonts/pk/ljfour/jknap
+pen/ec/ecbx1440.600pk> </home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1
+000.600pk> </home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> <
+/home/luca/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1728.600pk></usr/share/te
+xlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/share/texlive/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texmf-
+dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/share/texlive/texmf-dist/fo
+nts/type1/public/amsfonts/cm/cmmi7.pfb></usr/share/texlive/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb></usr/share/texlive/texmf-dist/fonts/type1/publ
+ic/amsfonts/cm/cmr5.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmr6.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
+</usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/
+share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb>
+Output written on Relazione.pdf (12 pages, 441575 bytes).
+PDF statistics:
+ 479 PDF objects out of 1000 (max. 8388607)
+ 102 compressed objects within 2 object streams
+ 0 named destinations out of 1000 (max. 500000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
+

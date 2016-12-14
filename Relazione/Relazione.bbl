@@ -1,0 +1,33 @@
+\begin{thebibliography}{4}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[H.~Bichsel(January 2012)]{PassParticMatterPDG}
+S.R.~Klein H.~Bichsel, D.D.~Groom.
+\newblock Passage of particles through matter.
+\newblock Report, University of Washington, January 2012.
+
+\bibitem[Katz and Penfold(1952)]{RevModPhys.24.28}
+L.~Katz and A.~S. Penfold.
+\newblock Range-energy relations for electrons and the determination of
+  beta-ray end-point energies by absorption.
+\newblock \emph{Rev. Mod. Phys.}, 24:\penalty0 28--44, Jan 1952.
+\newblock \doi{10.1103/RevModPhys.24.28}.
+\newblock URL \url{http://link.aps.org/doi/10.1103/RevModPhys.24.28}.
+
+\bibitem[Matthews(2005)]{matthews2005heitler}
+J~Matthews.
+\newblock A heitler model of extensive air showers.
+\newblock \emph{Astroparticle Physics}, 22\penalty0 (5):\penalty0 387--397,
+  2005.
+
+\bibitem[Patrignani et~al.(2016)]{Olive:2016xmw}
+C.~Patrignani et~al.
+\newblock {Review of Particle Physics}.
+\newblock \emph{Chin. Phys.}, C40\penalty0 (10):\penalty0 100001, 2016.
+\newblock \doi{10.1088/1674-1137/40/10/100001}.
+
+\end{thebibliography}

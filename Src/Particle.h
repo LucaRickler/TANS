@@ -11,13 +11,12 @@ enum PType {
 	PGAMMA = 0,
 	PELECTRON,
 	PPOSITRON,
-	NUMBER_OF_PARTICLES
+	NUMBER_OF_PARTICLES //Utile per tenere il conto del numero di tipi di particelle in vari array
 };
 
 //---------------------------------------------------------------------------//
 //														Sezioni d'urto																 //
 //---------------------------------------------------------------------------//
-//NOTA: possibile miglioria: calcolo di Z(h) da aggiungere alle sezioni d'urto
 
 double BSCrossSection(double k, double E) {
 	//Sezione d'urto per brehmsstrahlung
@@ -26,6 +25,7 @@ double BSCrossSection(double k, double E) {
 
 double BSCrossSectionMajor(double k, double E) {
 	//Maggiorante della sezione d'urto per brehmsstrahlung
+	//perché k<<E
 	return E/k;
 }
 
@@ -44,6 +44,7 @@ double NGamma(double E, double Kmin, double Kmax) {
 //---------------------------------------------------------------------------//
 
 double X0(PType ptype) {
+	//Nel caso in cui si voglia differenziare X0 per vari tipi di particelle
 	return 1.;
 }
 
@@ -53,8 +54,10 @@ class Particle : public TObject{
 	public:
 		Particle();
 		Particle(PType ptype, double energy, const Vector3D& direction, const Vector3D& position, bool primary = false);
+
 		bool Divide(double h, double dh, vector<Particle>& p1, int& counter, double& energy_lost); // Splitting della particella
 		bool Propagate(double h, double dh); // Trasporto della particella
+
 		double GetEnergy() const {return energy;}
 		PType GetPType() const {return ptype;}
 		bool IsPrimary() const {return is_primary;}

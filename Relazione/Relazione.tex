@@ -71,7 +71,7 @@ Sono dunque stati considerati, fino al raggiungimento delle rispettive energie c
 \subsection{Sviluppo dello sciame}
 L'atmosfera è stata suddivisa in strati verticali di spessore pari ad una lunghezza di radiazione $\tilde{x}_0 \unit{[g/cm^2]}$. Nel primo strato viene iniettato il raggio cosmico primario che, se sufficientemente energetico (i.e. $E > E_{soglia}$), interagirà attraverso la produzione di coppia o la radiazione di bremsstrahlung. Il processo è simulato ad intervalli costanti $dh$ (step) pari a $0.1\unit{\tilde{x}_0}$.
 
-Il comportamento dei leptoni e dei raggi $\gamma$è simulato in modi diversi per ogni specie.
+Il comportamento delle particelle è simulato in modi diversi per ogni specie.
  
 Cominciando dalla radiazione bremsstrahlung, dalla letteratura \citep{PassParticMatterPDG}, si trova che il numero di fotoni prodotti da un elettrone di energia $E_e$ in funzione dello spazio percorso e della loro energia, compresa tra $k_{min}$ e $k_{max}$, risulta essere pari a: 
 \begin{equation}
@@ -80,7 +80,7 @@ N_\gamma = \frac{d}{\tilde{x}_0}\left[\frac{4}{3}\ln{\frac{k_{max}}{k_{min}}}-\f
 \end{equation}
 valida per distanze percorse $d \ll \tilde{x}_0 \unit{[g/cm^2]}$. Si è quindi ricavato il libero cammino medio degli elettroni come la distanza alla quale il numero di $\gamma$ emessi è pari ad uno:
 \begin{equation}
-\lambda_{BS} = d = \left({\frac{\tilde{x}_0}{N_\gamma}}\right)_{N_\gamma \rightarrow 1}.
+\lambda_{BS} = d = \left\{{\frac{\tilde{x}_0 N_\gamma}{\left[\frac{4}{3}\ln{\frac{k_{max}}{k_{min}}}-\frac{4(k_{max} - k_{min})}{3E_e}+\frac{k_{max}^2 - k_{min}^2}{2E_e^2}\right]}}\right\}_{N_\gamma \rightarrow 1}.
 \label{eq:lambdaBS}
 \end{equation}
 
@@ -118,7 +118,7 @@ Questi due processi vengono eseguiti a cascata su tutti i prodotti fintanto che 
 \label{subsec:riassorb}
 Per quanto riguarda il riassorbimento dello sciame, si è proceduto nuovamente in modo diverso per leptoni e raggi gamma. 
 
-Per i leptoni, una volta che questi non hanno più energia sufficiente ad emettere fotoni, percorrono una distanza estratta da una distribuzione esponenziale con parametro pari al range elettronico in un mezzo che, da letteratura \citep{RevModPhys.24.28}, risulta pari a: 
+I leptoni, una volta che questi non hanno più energia sufficiente ad emettere fotoni, percorrono una distanza estratta da una distribuzione esponenziale con parametro pari al range elettronico in un mezzo che, da letteratura \citep{RevModPhys.24.28}, risulta pari a: 
 \begin{equation}
 R_{max} = \begin{cases} 0.412 E_e^{1.265-0.0954 \ln{E_e}}     & 0.01\le E_e \le 2.5\unit{MeV} \\ 
                                           0.530 E_e - 0.106                                   & E_e > 2.5\unit{MeV}. 
@@ -161,27 +161,35 @@ Per l'esecuzione, è sufficiente utilizzare la funzione \textit{EMShower}, speci
 Il codice è stato testato fino ad energie dell'ordine di $100 \unit{TeV}$ per questioni di potenza di calcolo.
 
 \section{Risultati e confronti con altri modelli}
-
-\begin{figure} [!htb]
-\centering
-\includegraphics[width=9cm, keepaspectratio]{\fpath geant}
-\textit{\caption{Risultati di una simulazione eseguita con Geant4. Sono mostrati il numero di particelle (punti), l'energia persa (linea continua). \cite{matthews2005heitler}}
-\label{img:geant}
-\end{figure} 
+Sono di seguito riportati i grafici di una simulazione con un raggio cosmico primario di energia $100 \unit{TeV}$. La Figura 3 mostra il numero di particelle per strato atmosferico, mentre la Figura 4 mostra l'energia persa dalla sciame per strato atmosferico. Come si può osservare, l'andamento dei due grafici è lo stesso, come ci si aspetta dalla teoria. 
 
 \begin{figure} [!htb]
 \centering
 \includegraphics[width=9cm, keepaspectratio]{\fpath N_1e8}
 \textit{\caption{Numero di particelle per strato atmosferico da uno sciame con primario di energia $100 \unit{TeV}$.}}
-\label{img:En_1e8}
+\label{img:N_1e8}
 \end{figure} 
 
 \begin{figure} [!htb]
 \centering
 \includegraphics[width=9cm, keepaspectratio]{\fpath En_1e8}
 \textit{\caption{Energia persa per strato atmosferico da uno sciame con primario di energia $100 \unit{TeV}$.}}
-\label{img:N_1e8}
+\label{img:En_1e8}
 \end{figure}
+
+
+I risultati ottenuti sono stati confrontati con una simulazione effettuata con EGS4, mostrata in Figura 5, per verificarne la bontà. 
+
+\begin{figure} [!htb]
+\centering
+\includegraphics[width=7cm, keepaspectratio]{\fpath geant}
+\textit{\caption{Risultati di una simulazione eseguita con Geant4. Sono mostrati il numero di particelle (punti) e l'energia persa (linea continua) \citep{matthews2005heitler}.}}
+\label{img:geant}
+\end{figure} 
+
+Come si può osservare, l'andamento del numero di particelle e dell'energia persa dallo sciame per strato atmosferico è in accordo con i risultati di altre simulazioni.
+
+Inoltre si è valutata la posizione del massimo della distribuzione al variare dell'energia del primario. Sono state effettuate 10 simulazioni differenti per ogni valore di energia e sono state calcolate la media e la deviazione standard di ogni campione. La Figura 6 mostra i risultati ottenuti (punti) ed il fit lineare associato (retta rossa). Come ci si aspetta dalla teoria (appendice \ref{appendix:b}), l'andamento risulta essere lineare con un coefficiente angolare prossimo a $2$. L'alto valore di $\chi^2$ riscontrato è dovuto ad una sottostima degli errori. Malgrado ciò, l'andamento è marcatamente lineare. La leggera deviazione dal fit osservata ad alte energie potrebbe essere dovuta ad una perdita di validità dell'approssimazione considerata per calcolare il libero cammino medio degli elettroni (equazione \ref{eq:lambdaBS}).
 
 \begin{figure} [!htb]
 \centering
@@ -189,8 +197,6 @@ Il codice è stato testato fino ad energie dell'ordine di $100 \unit{TeV}$ per q
 \textit{\caption{Elongation rate per sciami di energia compresa tra $200\unit{MeV}$ e $1\unit{TeV}$. Sono mostrati i dati della simulazione (punti) ed il fit lineare (retta rossa).}}
 \label{img:elongation}
 \end{figure}
-
-Come conferma della bontà della simulazione, si sono paragonati i risultati ottenuti con quelli di altre simulazioni. In particolare si può notare come l'andamento dell'energia per strato atmosferico ottenuto sia in linea con quello ottenuto con simulazioni svolte con Geant4 e come il coefficiente angolare ottenuto dallo studio dell'elongation rate sia effettivamente prossimo a quello stimato nel modelli di Heitler (si veda Appendice B). 
 
 %APPENDICI----------------------------------------------------------------------------------------------------------------------------------%
 
